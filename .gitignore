@@ -24,4 +24,4 @@ frontend/*.njsproj
 frontend/*.sln
 frontend/*.sw?
 
-backend/backend
+backend/backend/
