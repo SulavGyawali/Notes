@@ -25,3 +25,5 @@ frontend/*.sln
 frontend/*.sw?
 
 backend/backend/
+backend/.env
+backend/__pycache__/

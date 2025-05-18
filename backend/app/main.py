@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from .routers import users, auth, notes
 from dotenv import load_dotenv
+import os
 import psycopg2 as pg
 from psycopg2.extras import RealDictCursor
 import time
@@ -11,6 +12,12 @@ models.Base.metadata.create_all(bind=engine)
 
 # Load environment variables from .env file
 load_dotenv()
+
+POSTGRES_HOST = os.getenv("POSTGRES_HOST")
+POSTGRES_PORT = os.getenv("POSTGRES_PORT")
+POSTGRES_DB = os.getenv("POSTGRES_DB")
+POSTGRES_USER = os.getenv("POSTGRES_USER")
+POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD")
 
 # print(POSTGRES_USER)
 
