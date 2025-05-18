@@ -26,4 +26,4 @@ frontend/*.sw?
 
 backend/backend/
 backend/.env
-backend/__pycache__/
+backend/app/__pycache__/
