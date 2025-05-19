@@ -31,11 +31,17 @@ const Signup = (props) => {
       email: email,
       password: password,
     };
-    props.setNewUser(newUser);
+    console.log(newUser);
     props.setSignup(false);
+    props.setNewUser(newUser);
+    console.log(props.newUser);
+    setTimeout(() => {
+    }, 5000);
+    
     props.setUserName(email);
     props.setPassword(password);
-  }
+    props.handleCreateUser(newUser)
+  };
 
   return (
     <div className="h-[90vh] w-[100vw] flex justify-center items-center">
@@ -91,7 +97,10 @@ const Signup = (props) => {
           </div>
         </div>
         <div className="bottom flex justify-around items-center w-full my-5">
-          <button className="bg-indigo-700 border-2 p-2 w-[20vh] rounded-2xl text-xl font-medium hover:bg-indigo-400 transition 200 ease-in-out cursor-pointer " onClick={handleClick}>
+          <button
+            className="bg-indigo-700 border-2 p-2 w-[20vh] rounded-2xl text-xl font-medium hover:bg-indigo-400 transition 200 ease-in-out cursor-pointer "
+            onClick={handleClick}
+          >
             Sign up
           </button>
         </div>

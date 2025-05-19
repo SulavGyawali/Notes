@@ -19,12 +19,14 @@ const Navbar = (props) => {
             </>
           ) : (
             <>
-              <li className="hover:text-white cursor-pointer flex flex-col transition-all 200 ease-in-out group">
+              <li className="hover:text-white cursor-pointer flex flex-col transition-all 200 ease-in-out group"
+              onClick={()=>{props.setSignup(false);console.log("login")}}>
                 <p>Log in</p>
                 <span className="w-0 h-0.5 bg-red-600 group-hover:w-full transition-all 200 ease-in-out"></span>
               </li>
 
-              <li className="hover:text-white cursor-pointer flex flex-col transition-all 200 ease-in-out group">
+              <li className="hover:text-white cursor-pointer flex flex-col transition-all 200 ease-in-out group"
+              onClick={()=>{props.setSignup(true)}}>
                 <p>Sign up</p>
                 <span className="w-0 h-0.5 bg-red-600 group-hover:w-full transition-all 200 ease-in-out"></span>
               </li>

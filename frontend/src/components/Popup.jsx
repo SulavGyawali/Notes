@@ -12,6 +12,7 @@ const Popup = (props) => {
     props.setIsLoggedIn(false);
     props.setShowPopup(false);
     props.setLogout(true);
+    props.setSignup(false);
   };
 
   const handleDelete = async () => {

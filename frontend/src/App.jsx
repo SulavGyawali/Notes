@@ -11,11 +11,7 @@ import Popup from "./components/Popup";
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [signup, setSignup] = useState(false);
-  const [user, setUser] = useState({
-    username: "",
-    email: "",
-    password: "",
-  });
+
   const [notes, setNotes] = useState([]);
   const [newNote, setNewNote] = useState({
     title: "",
@@ -35,6 +31,10 @@ function App() {
   const [popType, setPopType] = useState("");
   const [logout, setLogout] = useState(false);
   const [noteId, setNoteId] = useState(null);
+  const [editId, setEditId] = useState(null);
+  const [editNote, setEditNote] = useState(null);
+  const [userName, setUserName] = useState("");
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (pop.current && !pop.current.contains(event.target)) {
@@ -60,7 +60,6 @@ function App() {
   }, [showPopup]);
 
   const handleLogin = async () => {
-    console.log("Login function called");
     try {
       const data = {
         email: email,
@@ -73,9 +72,6 @@ function App() {
       setToken(response.data.access_token);
       setTokenType(response.data.token_type);
       setIsLoggedIn(true);
-      console.log("Login successful:", response.data);
-      console.log("Token:", response.data.access_token);
-      console.log("Token type:", response.data.token_type);
       localStorage.setItem("token", response.data.access_token);
     } catch (error) {
       alert("Invalid credentials");
@@ -112,7 +108,7 @@ function App() {
                 },
               }
             );
-            console.log("Note added:", response.data);
+
             setNotes((prevNotes) => [...prevNotes, response.data]);
           } catch (error) {
             console.error("Error adding note:", error);
@@ -137,14 +133,15 @@ function App() {
 
   const handleDeleteNote = async (noteId) => {
     try {
-      console.log("Delete function called");
-      console.log("Note ID to delete:", noteId);
-      const response = await axios.delete(`http://localhost:8000/notes/${noteId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await axios.delete(
+        `http://localhost:8000/notes/${noteId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
       console.log("Note deleted:", response.data);
       setNotes((prevNotes) => prevNotes.filter((note) => note.id !== noteId));
     } catch (error) {
@@ -167,6 +164,47 @@ function App() {
     }
   };
 
+  const handleEditNote = async (editNote) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:8000/notes/${editId}`,
+        editNote,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      setNotes((prevNotes) =>
+        prevNotes.map((note) => (note.id === editId ? response.data : note))
+      );
+    } catch (error) {
+      console.error("Error editing note:", error);
+    }
+  };
+
+  const handleCreateUser = async (newUser) => {
+    try {
+      const data = {
+        username: newUser.username,
+        email: newUser.email,
+        password: newUser.password,
+      };
+      console.log("Creating user:", data);
+      console.log("new user:", newUser);
+      const response = await axios.post(
+        "http://localhost:8000/users",
+        data
+      );
+      console.log("User created:", response.data);
+    }
+    catch (error) {
+      alert("Error creating user");
+      console.error("Error creating user:", error);
+    }
+  }
+
   return (
     <>
       <div className="bg-indigo-400 h-screen w-screen flex flex-col justify-between items-center overflow-y-auto overflow-x-hidden pb-4">
@@ -175,6 +213,8 @@ function App() {
             isLoggedIn={isLoggedIn}
             setPopType={setPopType}
             setShowPopup={setShowPopup}
+            setIsLoggedIn={setIsLoggedIn}
+            setSignup={setSignup}
           />
           <Popup
             ref={pop}
@@ -185,6 +225,7 @@ function App() {
             setLogout={setLogout}
             handleDeleteNote={handleDeleteNote}
             noteId={noteId}
+            setSignup={setSignup}
           />
           <Routes>
             <Route
@@ -197,14 +238,23 @@ function App() {
                     setPopType={setPopType}
                     setShowPopup={setShowPopup}
                     setNoteId={setNoteId}
+                    setEditId={setEditId}
+                    token={token}
+                    editId={editId}
+                    setNotes={setNotes}
+                    editNote={editNote}
+                    setEditNote={setEditNote}
+                    handleEditNote={handleEditNote}
                   />
                 ) : signup ? (
+                
                   <Signup
                     newUser={newUser}
                     setNewUser={setNewUser}
                     setUserName={setUserName}
                     setSignup={setSignup}
                     setPassword={setPassword}
+                    handleCreateUser={handleCreateUser}
                   />
                 ) : (
                   <Login

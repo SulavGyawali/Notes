@@ -1,11 +1,16 @@
 import Notes from "./Notes";
 import Addnotes from "./Addnotes";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, use } from "react";
+import Editnotes from "./Editnotes";
+import axios from "axios";
 
 const Home = (props) => {
   const [add, setAdd] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const [clicked, setClicked] = useState(false);
   const pop = useRef(null);
+  const edit = useRef(null);
+
 
 
   const handleClick = () => {
@@ -19,6 +24,24 @@ const Home = (props) => {
   const handleClosePop = () => {
     setAdd(false);
   };
+
+  const handleCloseEditPop = () => {
+    setIsEditing(false);
+  };
+
+  useEffect(() => {
+    if (isEditing) {
+      const handleClickOutside = (event) => {
+        if (edit.current && !edit.current.contains(event.target)) {
+          handleCloseEditPop();
+        }
+      };
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }
+  }, [isEditing]);
 
   useEffect(() => {
     if (add) {
@@ -34,24 +57,37 @@ const Home = (props) => {
     }
   }, [add]);
 
-    useEffect(() => {
-        const handleKeyDown = (event) => {
-            if (event.key === "Escape") {
-            handleClosePop();
-            }
-        };
-        document.addEventListener("keydown", handleKeyDown);
-        return () => {
-            document.removeEventListener("keydown", handleKeyDown);
-        };
-        }
-    , []);
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        handleClosePop();
+        handleCloseEditPop();
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   return (
     <div
       className={`relative flex flex-col gap-2 items-between justify-around min-h-[80vh] w-[90vw] mx-auto mt-[10vh] p-5 mb-5 over`}
     >
-      <Addnotes add={add} ref={pop} setNewNote={props.setNewNote} setAdd={setAdd}/>
+      <Addnotes
+        add={add}
+        ref={pop}
+        setNewNote={props.setNewNote}
+        setAdd={setAdd}
+      />
+      <Editnotes
+        isEditing={isEditing}
+        ref={edit}
+        setEditNote={props.setEditNote}
+        setIsEditing={setIsEditing}
+        editNote={props.editNote}
+        handleEditNote={props.handleEditNote}
+      />
       <button
         className={`${
           clicked ? "bg-indigo-500" : "bg-indigo-600"
@@ -61,14 +97,12 @@ const Home = (props) => {
         Add notes
       </button>
       <div className="notes flex flex-wrap justify-center h-[45vh]  gap-4 mt-5 mb-10 ">
-        
         {props.notes.length === 0 && (
           <div className="text-white text-2xl font-medium">
             No notes available
           </div>
         )}
-        {
-        props.notes.map((note) => (
+        {props.notes.map((note) => (
           <Notes
             key={note.id}
             id={note.id}
@@ -77,6 +111,8 @@ const Home = (props) => {
             setPopType={props.setPopType}
             setShowPopup={props.setShowPopup}
             setNoteId={props.setNoteId}
+            setIsEditing={setIsEditing}
+            setEditId={props.setEditId}
           />
         ))}
       </div>
