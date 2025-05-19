@@ -7,10 +7,10 @@ from psycopg2.extras import RealDictCursor
 import time
 from .database import engine
 from . import models
+from fastapi.middleware.cors import CORSMiddleware
 
 models.Base.metadata.create_all(bind=engine)
 
-# Load environment variables from .env file
 load_dotenv()
 
 POSTGRES_HOST = os.getenv("POSTGRES_HOST")
@@ -22,6 +22,19 @@ POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD")
 # print(POSTGRES_USER)
 
 app = FastAPI()
+
+origins = [
+    "http://127.0.0.1:5173",
+    "http://localhost:5173",  
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,          
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 while True:
     try:

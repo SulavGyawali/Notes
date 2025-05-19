@@ -26,6 +26,8 @@ async def login(user_creds:Login,db: Session = Depends(get_db)):
 
     return {"access_token": access_token, "token_type": "bearer"}
 
+
+
 @router.post('/logout')
 async def logout(response: Response):
     response.delete_cookie(key="Authorization")
