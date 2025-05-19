@@ -7,18 +7,6 @@ const Home = (props) => {
   const [clicked, setClicked] = useState(false);
   const pop = useRef(null);
 
-  const handleAddNote = (e) => {
-    e.preventDefault();
-    const title = e.target[0].value;
-    const description = e.target[1].value;
-
-    const newNote = {
-      title,
-      description,
-    };
-
-    props.setNewNote(newNote);
-  };
 
   const handleClick = () => {
     setClicked(!clicked);
@@ -61,7 +49,7 @@ const Home = (props) => {
 
   return (
     <div
-      className={`relative flex flex-col gap-2 items-between justify-around h-[80vh] w-[90vw] mx-auto mt-[5vh]`}
+      className={`relative flex flex-col gap-2 items-between justify-around min-h-[80vh] w-[90vw] mx-auto mt-[10vh] p-5 mb-5 over`}
     >
       <Addnotes add={add} ref={pop} setNewNote={props.setNewNote} setAdd={setAdd}/>
       <button
@@ -72,7 +60,7 @@ const Home = (props) => {
       >
         Add notes
       </button>
-      <div className="notes flex flex-wrap justify-center h-[45vh]  gap-4 mt-5">
+      <div className="notes flex flex-wrap justify-center h-[45vh]  gap-4 mt-5 mb-10 ">
         
         {props.notes.length === 0 && (
           <div className="text-white text-2xl font-medium">
@@ -83,8 +71,12 @@ const Home = (props) => {
         props.notes.map((note) => (
           <Notes
             key={note.id}
+            id={note.id}
             title={note.title}
             description={note.description}
+            setPopType={props.setPopType}
+            setShowPopup={props.setShowPopup}
+            setNoteId={props.setNoteId}
           />
         ))}
       </div>
