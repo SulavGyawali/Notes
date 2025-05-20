@@ -79,6 +79,7 @@ const Home = (props) => {
         ref={pop}
         setNewNote={props.setNewNote}
         setAdd={setAdd}
+        
       />
       <Editnotes
         isEditing={isEditing}

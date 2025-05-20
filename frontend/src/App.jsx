@@ -34,6 +34,8 @@ function App() {
   const [editId, setEditId] = useState(null);
   const [editNote, setEditNote] = useState(null);
   const [userName, setUserName] = useState("");
+  const [refreshToken, setRefreshToken] = useState("");
+  const [unauthorized, setUnauthorized] = useState(false);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -46,6 +48,7 @@ function App() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [showPopup]);
+
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -71,8 +74,10 @@ function App() {
       );
       setToken(response.data.access_token);
       setTokenType(response.data.token_type);
+      setRefreshToken(response.data.refresh_token);
       setIsLoggedIn(true);
       localStorage.setItem("token", response.data.access_token);
+      localStorage.setItem("refresh_token", response.data.refresh_token);
     } catch (error) {
       alert("Invalid credentials");
       console.error("Error logging in:", error);
@@ -80,11 +85,80 @@ function App() {
   };
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    if (storedToken) {
-      setToken(storedToken);
-      setIsLoggedIn(true);
+    const handleRefreshToken = async () => {
+      try {
+        const response = await axios.post(
+          "http://localhost:8000/auth/refresh-token",
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        setToken(response.data.access_token);
+        setTokenType(response.data.token_type);
+        localStorage.setItem("token", response.data.access_token);
+      }
+      catch (error) {
+        console.error("Error refreshing token:", error);
+        setIsLoggedIn(false);
+        setToken("");
+      }
     }
+    const interval = setInterval(() => {
+      if (isLoggedIn) {
+        handleRefreshToken();
+      }
+    }
+      , 1000 * 60 * 15); 
+    return () => clearInterval(interval);
+  }, [isLoggedIn, token]);
+
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    const handleVerifyToken = async () => {
+      try {
+        const response = await axios.get("http://localhost:8000/auth/verify-token", {
+          headers: {
+            Authorization: `Bearer ${storedToken}`,
+            "Content-Type": "application/json",
+          },
+        });
+        if (response.status === 200) {
+          setToken(storedToken);
+          setIsLoggedIn(true);
+        }
+      } catch (error) {
+        const refresh = localStorage.getItem("refresh_token");
+        if (refresh) {
+          try {
+            console.log("Refreshing token...");
+            const response = await axios.get(
+              "http://localhost:8000/auth/refresh-token",
+              
+              {
+                headers: {
+                  Authorization: `Bearer ${refresh}`,
+                  "Content-Type": "application/json",
+                },
+              }
+            );
+            setToken(response.data.access_token);
+            setIsLoggedIn(true);
+          } catch (error) {
+            console.error("Error refreshing token:", error);
+            setIsLoggedIn(false);
+            setToken("");
+          }
+        } else {
+          setIsLoggedIn(false);
+          setToken("");
+        }
+      }
+    };
+    handleVerifyToken();
   }, []);
 
   useEffect(() => {
@@ -112,12 +186,19 @@ function App() {
             setNotes((prevNotes) => [...prevNotes, response.data]);
           } catch (error) {
             console.error("Error adding note:", error);
+            console.log("Error message:", error.message);
+      if (error.mesage === "Request failed with status code 401") {
+        setUnauthorized(true);
+        setLogout(true);
+        setIsLoggedIn(false);
+      }
           }
         };
         addNote();
       }
     } catch (error) {
       console.error("Error in adding note:", error);
+      
       setIsLoggedIn(false);
       setToken("");
     }
@@ -126,6 +207,7 @@ function App() {
   useEffect(() => {
     if (logout) {
       localStorage.removeItem("token");
+      localStorage.removeItem("refresh_token");
       setIsLoggedIn(false);
       setLogout(false);
     }
@@ -245,6 +327,7 @@ function App() {
                     editNote={editNote}
                     setEditNote={setEditNote}
                     handleEditNote={handleEditNote}
+                    setUnauthorized={setUnauthorized}
                   />
                 ) : signup ? (
                 

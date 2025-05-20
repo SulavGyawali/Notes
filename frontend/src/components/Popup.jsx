@@ -1,5 +1,3 @@
-import React, { useEffect } from "react";
-
 const Popup = (props) => {
   const title = props.popType === "logout" ? "Logout" : "Delete";
 
@@ -22,20 +20,6 @@ const Popup = (props) => {
   const handleCancel = () => {
     props.setShowPopup(false);
   };
-
-useEffect(() => {
-    const handleKeyDown = (event) => {
-      if (event.key === "Enter") {
-        props.popType === "logout"
-          ? handleLogout()
-          : handleDelete();
-      }
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [props.showPopup]);
 
   return (
     <div
