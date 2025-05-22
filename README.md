@@ -35,6 +35,7 @@ A full-stack Notes application built with **React** and **Tailwind CSS** for the
 
 Ensure you have the following installed:
 (note: The project is not completed and docker is not setup you can skip the docker part)
+
 - [Docker](https://www.docker.com/get-started)
 - [Docker Compose](https://docs.docker.com/compose/install/)
 
@@ -57,8 +58,9 @@ Ensure you have the following installed:
 
 3. **Access the application:**
 
-   - Frontend: [http://localhost:3000](http://localhost:3000)
+   - Frontend: [http://localhost:5173](http://localhost:5173)
    - Backend API: [http://localhost:8000](http://localhost:8000)
+   - PostgreSQL : [http://localhost:5432](http://localhost:5432)
 
 ## 📖 Usage
 
@@ -91,4 +93,3 @@ Contributions are welcome! To contribute:
 3. Commit your changes: `git commit -m 'Add your feature'`
 4. Push to the branch: `git push origin feature/your-feature-name`
 5. Open a pull request.
-
