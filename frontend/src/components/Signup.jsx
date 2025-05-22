@@ -6,6 +6,7 @@ const Signup = (props) => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -18,6 +19,10 @@ const Signup = (props) => {
     } else if (name === "repassword") {
       setRepassword(value);
     }
+  };
+
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword);
   };
 
   const handleClick = (e) => {
@@ -36,7 +41,7 @@ const Signup = (props) => {
     props.setNewUser(newUser);
     props.setUserName(email);
     props.setPassword(password);
-    props.handleCreateUser(newUser)
+    props.handleCreateUser(newUser);
     props.handleAlert("User Created Successfully!", "success");
   };
 
@@ -73,10 +78,26 @@ const Signup = (props) => {
             <div className="top flex justify-between items-center">
               <span>Password</span>
               <span className=" bg-indigo-500"></span>
+              <label className="show flex ml-5 items-center gap-2 cursor-pointer bg-indigo-500">
+                <input
+                  type="checkbox"
+                  name=""
+                  id=""
+                  className="w-2 h-2 rounded-full appearance-none bg-indigo-200 checked:ring-3 checked:ring-indigo-700 cursor-pointer"
+                  onClick={handleShowPassword}
+                />
+                <span
+                  className={`${
+                    showPassword ? "text-white" : "text-indigo-200"
+                  }`}
+                >
+                  Show Password
+                </span>
+              </label>
             </div>
 
             <input
-              type="password"
+              type={`${showPassword ? "text" : "password"}`}
               placeholder="Password"
               className="w-full h-10 rounded-2xl p-2 outline-none decoration-white border-2 border-white text-xl focus:border-2 focus:outline-none focus:bg-indigo-400 my-2"
               value={password}
@@ -84,7 +105,7 @@ const Signup = (props) => {
               onChange={handleChange}
             />
             <input
-              type="password"
+              type={`${showPassword ? "text" : "password"}`}
               placeholder="Re enter password"
               className="w-full h-10 rounded-2xl p-2 outline-none decoration-white border-2 border-white text-xl focus:border-2 focus:outline-none focus:bg-indigo-400 my-2"
               value={repassword}

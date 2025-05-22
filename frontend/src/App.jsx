@@ -94,6 +94,8 @@ function App() {
       localStorage.setItem("token", response.data.access_token);
       localStorage.setItem("refresh_token", response.data.refresh_token);
       handleAlert("Logged in Successfully!", "success");
+      setEmail("");
+      setPassword("");
     } catch (error) {
       handleAlert("Invalid credentials!", "error");
       console.error("Error logging in:", error);
@@ -203,6 +205,7 @@ function App() {
             );
 
             setNotes((prevNotes) => [...prevNotes, response.data]);
+            handleAlert("Note Added Successfully!", "success");
           } catch (error) {
             handleAlert("Error adding note!", "error");
             console.error("Error adding note:", error);
@@ -216,7 +219,7 @@ function App() {
         };
         addNote();
       }
-      handleAlert("Note Added Successfully!", "success");
+      
     } catch (error) {
       console.error("Error in adding note:", error);
       handleAlert("Error in adding note!", "error");
@@ -231,6 +234,9 @@ function App() {
       localStorage.removeItem("refresh_token");
       setIsLoggedIn(false);
       setLogout(false);
+      setEmail("");
+      setPassword("");
+      console.log(email, password)
       handleAlert("Logged out Successfully!", "success");
     }
   }, [logout]);
