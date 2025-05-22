@@ -7,6 +7,7 @@ import axios from "axios";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import Popup from "./components/Popup";
+import Alert from "./components/Alert";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -36,6 +37,21 @@ function App() {
   const [userName, setUserName] = useState("");
   const [refreshToken, setRefreshToken] = useState("");
   const [unauthorized, setUnauthorized] = useState(false);
+  const [alert, setAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertType, setAlertType] = useState("success");
+
+  const handleAlert = (message, type) => {
+    
+    setAlertMessage(message);
+    setAlertType(type);
+    setAlert(true);
+    
+    setTimeout(() => {
+      setAlert(false);
+    }, 3000);
+
+  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -48,7 +64,6 @@ function App() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [showPopup]);
-
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -78,8 +93,9 @@ function App() {
       setIsLoggedIn(true);
       localStorage.setItem("token", response.data.access_token);
       localStorage.setItem("refresh_token", response.data.refresh_token);
+      handleAlert("Logged in Successfully!", "success");
     } catch (error) {
-      alert("Invalid credentials");
+      handleAlert("Invalid credentials!", "error");
       console.error("Error logging in:", error);
     }
   };
@@ -100,19 +116,17 @@ function App() {
         setToken(response.data.access_token);
         setTokenType(response.data.token_type);
         localStorage.setItem("token", response.data.access_token);
-      }
-      catch (error) {
+      } catch (error) {
         console.error("Error refreshing token:", error);
         setIsLoggedIn(false);
         setToken("");
       }
-    }
+    };
     const interval = setInterval(() => {
       if (isLoggedIn) {
         handleRefreshToken();
       }
-    }
-      , 1000 * 60 * 15); 
+    }, 1000 * 60 * 15);
     return () => clearInterval(interval);
   }, [isLoggedIn, token]);
 
@@ -120,12 +134,15 @@ function App() {
     const storedToken = localStorage.getItem("token");
     const handleVerifyToken = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/auth/verify-token", {
-          headers: {
-            Authorization: `Bearer ${storedToken}`,
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await axios.get(
+          "http://localhost:8000/auth/verify-token",
+          {
+            headers: {
+              Authorization: `Bearer ${storedToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
         if (response.status === 200) {
           setToken(storedToken);
           setIsLoggedIn(true);
@@ -137,7 +154,7 @@ function App() {
             console.log("Refreshing token...");
             const response = await axios.get(
               "http://localhost:8000/auth/refresh-token",
-              
+
               {
                 headers: {
                   Authorization: `Bearer ${refresh}`,
@@ -145,6 +162,7 @@ function App() {
                 },
               }
             );
+            console.log(response.data.access_token);
             setToken(response.data.access_token);
             setIsLoggedIn(true);
           } catch (error) {
@@ -164,6 +182,7 @@ function App() {
   useEffect(() => {
     if (token) {
       handlefetchNotes();
+      localStorage.setItem("token", token);
     }
   }, [token]);
 
@@ -185,20 +204,22 @@ function App() {
 
             setNotes((prevNotes) => [...prevNotes, response.data]);
           } catch (error) {
+            handleAlert("Error adding note!", "error");
             console.error("Error adding note:", error);
             console.log("Error message:", error.message);
-      if (error.mesage === "Request failed with status code 401") {
-        setUnauthorized(true);
-        setLogout(true);
-        setIsLoggedIn(false);
-      }
+            if (error.mesage === "Request failed with status code 401") {
+              setUnauthorized(true);
+              setLogout(true);
+              setIsLoggedIn(false);
+            }
           }
         };
         addNote();
       }
+      handleAlert("Note Added Successfully!", "success");
     } catch (error) {
       console.error("Error in adding note:", error);
-      
+      handleAlert("Error in adding note!", "error");
       setIsLoggedIn(false);
       setToken("");
     }
@@ -210,6 +231,7 @@ function App() {
       localStorage.removeItem("refresh_token");
       setIsLoggedIn(false);
       setLogout(false);
+      handleAlert("Logged out Successfully!", "success");
     }
   }, [logout]);
 
@@ -226,7 +248,9 @@ function App() {
       );
       console.log("Note deleted:", response.data);
       setNotes((prevNotes) => prevNotes.filter((note) => note.id !== noteId));
+      handleAlert("Note Deleted Successfully!", "success");
     } catch (error) {
+      handleAlert("Error deleting note!", "error");
       console.error("Error deleting note:", error);
     }
   };
@@ -242,6 +266,7 @@ function App() {
       setNotes(response.data);
       console.log("Fetched notes:", response.data);
     } catch (error) {
+      handleAlert("Error fetching notes!", "error");
       console.error("Error fetching notes:", error);
     }
   };
@@ -261,7 +286,9 @@ function App() {
       setNotes((prevNotes) =>
         prevNotes.map((note) => (note.id === editId ? response.data : note))
       );
+      handleAlert("Note Edited Successfully!", "success");
     } catch (error) {
+      handleAlert("Error editing note!", "error");
       console.error("Error editing note:", error);
     }
   };
@@ -275,17 +302,14 @@ function App() {
       };
       console.log("Creating user:", data);
       console.log("new user:", newUser);
-      const response = await axios.post(
-        "http://localhost:8000/users",
-        data
-      );
+      const response = await axios.post("http://localhost:8000/users", data);
       console.log("User created:", response.data);
-    }
-    catch (error) {
-      alert("Error creating user");
+      handleAlert("User Created Successfully!", "success");
+    } catch (error) {
+      handleAlert("Error creating user!", "error");
       console.error("Error creating user:", error);
     }
-  }
+  };
 
   return (
     <>
@@ -297,6 +321,11 @@ function App() {
             setShowPopup={setShowPopup}
             setIsLoggedIn={setIsLoggedIn}
             setSignup={setSignup}
+          />
+          <Alert 
+          alertMessage={alertMessage}
+          alertType={alertType}
+          alert={alert}
           />
           <Popup
             ref={pop}
@@ -330,7 +359,6 @@ function App() {
                     setUnauthorized={setUnauthorized}
                   />
                 ) : signup ? (
-                
                   <Signup
                     newUser={newUser}
                     setNewUser={setNewUser}

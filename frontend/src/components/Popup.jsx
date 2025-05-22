@@ -11,11 +11,13 @@ const Popup = (props) => {
     props.setShowPopup(false);
     props.setLogout(true);
     props.setSignup(false);
+    props.handleAlert("Logout Successfully", "success");
   };
 
   const handleDelete = async () => {
     props.setShowPopup(false);
     await props.handleDeleteNote(props.noteId);
+    props.handleAlert("Note Deleted Successfully", "success");
   };
   const handleCancel = () => {
     props.setShowPopup(false);

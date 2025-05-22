@@ -72,7 +72,7 @@ const Home = (props) => {
 
   return (
     <div
-      className={`relative flex flex-col gap-2 items-between justify-around min-h-[80vh] w-[90vw] mx-auto mt-[10vh] p-5 mb-5 over`}
+      className={`relative flex flex-col gap-2 items-between justify-around min-h-[80vh] w-[90vw] mx-auto mt-[15vh] p-5 mb-5 over`}
     >
       <Addnotes
         add={add}

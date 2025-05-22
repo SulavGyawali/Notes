@@ -23,7 +23,7 @@ const Signup = (props) => {
   const handleClick = (e) => {
     e.preventDefault();
     if (password !== repassword) {
-      alert("Passwords do not match");
+      props.handleAlert("Passwords do not match!", "error");
       return;
     }
     const newUser = {
@@ -31,16 +31,13 @@ const Signup = (props) => {
       email: email,
       password: password,
     };
-    console.log(newUser);
+
     props.setSignup(false);
     props.setNewUser(newUser);
-    console.log(props.newUser);
-    setTimeout(() => {
-    }, 5000);
-    
     props.setUserName(email);
     props.setPassword(password);
     props.handleCreateUser(newUser)
+    props.handleAlert("User Created Successfully!", "success");
   };
 
   return (
