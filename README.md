@@ -72,9 +72,11 @@ Ensure you have the following installed:
 
 ```
 Notes/
-├── backend/               # FastAPI backend
-│   ├── main.py            # Entry point for the API
-│   └── ...                # Additional backend modules
+├── backend/
+|    ├──app/               # FastAPI backend
+│    |  ├── main.py            # Entry point for the API
+│    |  └── ...                # Additional backend modules
+|    ├── requirements.txt
 ├── frontend/              # React frontend
 │   ├── src/
 │   │   ├── App.jsx        # Main React component
