@@ -55,6 +55,7 @@ while True:
     except Exception as e:
         print(e)
         print("Failed to connect to the database")
+        exit()
         time.sleep(5)
 
 # Root endpoint
@@ -71,4 +72,4 @@ if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="notes-api", port=8000)
 
-# Run with: uvicorn main:app --reload
+# Run with: uvicorn app.main:app --reload

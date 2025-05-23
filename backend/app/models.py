@@ -1,5 +1,5 @@
 from .database import Base
-from sqlalchemy import Column, Integer, String, TIMESTAMP, ForeignKey
+from sqlalchemy import Column, Integer, String, TIMESTAMP, ForeignKey, Boolean
 from sqlalchemy.sql import text
 from sqlalchemy.orm import relationship
 
@@ -22,5 +22,7 @@ class Notes(Base):
     created_at = Column(TIMESTAMP(timezone=True), server_default=text('now()'), nullable=False)
     updated_at = Column(TIMESTAMP(timezone=True), server_default=text('now()'), onupdate=text('now()'), nullable=False)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    favourite = Column(Boolean, default=False)
+    folder = Column(String, nullable=True)
     user = relationship("User", back_populates="notes")
 
