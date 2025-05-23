@@ -1,7 +1,0 @@
-@import url('https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap');
-@import "tailwindcss";
-
-
-.custom-kaushan {
-  font-family: 'Kaushan Script' !important;
-}

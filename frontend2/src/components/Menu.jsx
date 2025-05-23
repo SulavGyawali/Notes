@@ -32,7 +32,7 @@ const Menu = () => {
           <div className="note flex pl-3 bg-[#312EB5] h-[5vh] items-center overflow-hidden">
             <FiFileText className="text-2xl " />
             <div className="text-lg max-h-full overflow-hidden whitespace-nowrap text-ellipsis ml-2">
-              Reflection on the Month of June
+              Reflection on the Month of June 
             </div>
           </div>
           <div className="note flex pl-3  h-[5vh] items-center overflow-hidden">
@@ -49,25 +49,37 @@ const Menu = () => {
           </div>
         </div>
       </div>
-      <div className="box4  w-full h-[20%] mt-5 flex flex-col">
-        <div className="folders opacity-50  pl-3 flex justify-between">
+      <div className="box4 max-h-[30%] w-full h-[20%] mt-5 flex flex-col">
+        <div className="folders  opacity-50  pl-3 flex justify-between">
             <span className="text-sm">Folder</span>
             <HiOutlineFolderAdd className="text-2xl mr-4" />
         </div>
-        <div className="folder-list flex flex-col my-2">
-          <div className="folder flex pl-3  h-[5vh] items-center overflow-hidden opacity-100 bg-neutral-800">
+        <div className="folder-list max-h-[30vh]  w-full h-[20vh] flex flex-col overflow-y-scroll scrollbar">
+          <div className="folder flex pl-3  min-h-[5vh] items-center overflow-hidden opacity-100 bg-neutral-800">
             <FaRegFolderOpen className="text-2xl " />
             <div className="text-lg max-h-full overflow-hidden whitespace-nowrap text-ellipsis ml-2 ">
               Personal
             </div>
           </div>
-          <div className="folder flex pl-3  h-[5vh] items-center overflow-hidden opacity-50">
+          <div className="folder flex pl-3  min-h-[5vh] items-center overflow-hidden opacity-50">
             <FaRegFolder className="text-2xl " />
             <div className="text-lg max-h-full overflow-hidden whitespace-nowrap text-ellipsis ml-2">
               Work
             </div>
           </div>
-          <div className="folder flex pl-3  h-[5vh] items-center overflow-hidden opacity-50">
+          <div className="folder flex pl-3  min-h-[5vh] items-center overflow-hidden opacity-50">
+            <FaRegFolder className="text-2xl " />
+            <div className="text-lg max-h-full overflow-hidden whitespace-nowrap text-ellipsis ml-2">
+              Travel
+            </div>
+          </div>
+          <div className="folder flex pl-3  min-h-[5vh] items-center overflow-hidden opacity-50">
+            <FaRegFolder className="text-2xl " />
+            <div className="text-lg max-h-full overflow-hidden whitespace-nowrap text-ellipsis ml-2">
+              Travel
+            </div>
+          </div>
+          <div className="folder flex pl-3  min-h-[5vh] items-center overflow-hidden opacity-50">
             <FaRegFolder className="text-2xl " />
             <div className="text-lg max-h-full overflow-hidden whitespace-nowrap text-ellipsis ml-2">
               Travel
