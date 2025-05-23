@@ -48,7 +48,7 @@ while True:
         )
         cur = conn.cursor()
         print("Connected to the database")
-        cur.execute("CREATE TABLE IF NOT EXISTS notes (id serial PRIMARY KEY, author VARCHAR(50), title VARCHAR(50), description TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, user_id INTEGER REFERENCES users(id))")
+        cur.execute("CREATE TABLE IF NOT EXISTS notes (id serial PRIMARY KEY, author VARCHAR(50), title VARCHAR(50), description TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, user_id INTEGER REFERENCES users(id), favourite BOOLEAN, folder TEXT)")
         cur.execute("CREATE TABLE IF NOT EXISTS users (id serial PRIMARY KEY, username VARCHAR(50), email VARCHAR(50), password VARCHAR(100))")
         conn.commit()
         break
