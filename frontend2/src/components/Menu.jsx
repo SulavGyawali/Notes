@@ -5,6 +5,7 @@ import { IoMdAdd } from "react-icons/io";
 import { FiFileText,FiTrash } from "react-icons/fi";
 import { FaRegFolder, FaRegFolderOpen, FaRegHeart } from "react-icons/fa";
 import { HiOutlineFolderAdd } from "react-icons/hi";
+import { IoIosMore } from "react-icons/io";
 
 const Menu = () => {
   return (
@@ -112,6 +113,26 @@ const Menu = () => {
             </div>
           </div>
         </div>
+      </div>
+      <div className="box6 w-full flex mt-10 mx-auto justify-between items-center gap-2 font-medium rounded-3xl p-2">
+        <div className="left flex items-center gap-2">
+          <div className="left">
+<img src="https://avatars.githubusercontent.com/u/80841276?v=4" alt="" className="h-10 w-10 rounded-3xl "/>
+
+        </div>
+        <div className="mid flex flex-col">
+          <div className="username">Sujan Gyawali</div>
+          <div className="email opacity-50">
+            sujan@example.com
+          </div>
+        </div>
+        </div>
+        
+
+        <div className="right">
+<IoIosMore className="text-2xl opacity-50" />
+        </div>
+        
       </div>
     </div>
   );
