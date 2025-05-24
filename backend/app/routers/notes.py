@@ -31,6 +31,13 @@ async def read_notes(db: Session = Depends(get_db), current_user: schemas.User =
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No notes found")
     return notes
 
+@router.get("/{note_id}", response_model=schemas.Note)
+async def read_note(note_id: int, db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):
+    note = db.query(models.Notes).filter(models.Notes.id == note_id, models.Notes.user_id == current_user.id).first()
+    if note is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Item not found")
+    return note
+
 @router.delete("/{note_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_note(note_id: int, db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):
     note = db.query(models.Notes).filter(models.Notes.id == note_id).first()

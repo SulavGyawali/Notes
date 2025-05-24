@@ -19,6 +19,10 @@ function App() {
   const [refreshToken, setRefreshToken] = useState("");
   const [notes, setNotes] = useState([]);
   const [folders, setFolders] = useState([]);
+  const [recentNotes, setRecentNotes] = useState([]);
+  const [currentNote, setCurrentNote] = useState(null);
+  const [currentNoteId, setCurrentNoteId] = useState(null);
+  const [currentFolder, setCurrentFolder] = useState(null);
 
   const handleCreateUser = async (newUser) => {
     try {
@@ -47,13 +51,40 @@ function App() {
         },
       });
       setNotes(response.data);
-      console.log("Notes fetched successfully:", response.data);
-      console.log("Fetched notes:", response.data);
     } catch (error) {
       // handleAlert("Error fetching notes!", "error");
       console.error("Error fetching notes:", error);
     }
   };
+
+  useEffect(() => {
+    const fetchNote = async (noteId) => {
+      try {
+        const response = await axios.get(`http://localhost:8000/notes/${noteId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+        setCurrentNote(response.data);
+      } catch (error) {
+        console.error("Error fetching note:", error);
+      }
+    };
+    if (currentNoteId) {
+      fetchNote(currentNoteId);
+    }
+  }, [currentNoteId]);
+
+  useEffect(() => {
+    if (currentNote) {
+      if (currentNote.folder) {
+        setCurrentFolder(currentNote.folder);
+      } else {
+        setCurrentFolder(null);
+      }
+    }
+  }, [currentNote]);
 
   useEffect(() => {
     const updateFolders = () => {
@@ -83,6 +114,14 @@ function App() {
       navigate("/");
     }
   }, [isLoggedIn, navigate]);
+
+  useEffect(() => {
+    const handleRecentNotes = () => {
+      const recentNotes = notes.slice(-3);
+      setRecentNotes(recentNotes);
+    };
+    handleRecentNotes();
+  }, [notes]);
 
   useEffect(() => {
     const handleRefreshToken = async () => {
@@ -135,7 +174,6 @@ function App() {
         const refresh = localStorage.getItem("refresh_token");
         if (refresh) {
           try {
-            console.log("Refreshing token...");
             const response = await axios.get(
               "http://localhost:8000/auth/refresh-token",
 
@@ -146,7 +184,7 @@ function App() {
                 },
               }
             );
-            console.log(response.data.access_token);
+
             setToken(response.data.access_token);
 
             setIsLoggedIn(true);
@@ -173,7 +211,26 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
+      <Route
+        path="/"
+        element={
+          <Home
+            notes={notes}
+            folders={folders}
+            recentNotes={recentNotes}
+            setNotes={setNotes}
+            setFolders={setFolders}
+            setCurrentFolder={setCurrentFolder}
+            currentFolder={currentFolder}
+            currentNote={currentNote}
+            setCurrentNote={setCurrentNote}
+            isLoggedIn={isLoggedIn}
+            setIsLoggedIn={setIsLoggedIn}
+            currentNoteId={currentNoteId}
+            setCurrentNoteId={setCurrentNoteId}
+          />
+        }
+      />
       <Route
         path="/login"
         element={

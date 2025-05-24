@@ -24,5 +24,7 @@ class Notes(Base):
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     favourite = Column(Boolean, default=False)
     folder = Column(String, nullable=True)
+    archive = Column(Boolean, default=False)
+    trash = Column(Boolean, default=False)
     user = relationship("User", back_populates="notes")
 

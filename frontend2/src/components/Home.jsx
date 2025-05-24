@@ -4,10 +4,22 @@ import Menu from './Menu'
 import List from './List'
 import Content from './Content'
 
-const Home = () => {
+const Home = (props) => {
   return (
     <div className='text-white flex h-[100vh] items-center relative overflow-y-hidden'>
-      <Menu />
+      <Menu 
+      recentNotes={props.recentNotes}
+      folders={props.folders}
+      setFolders={props.setFolders}
+      setCurrentFolder={props.setCurrentFolder}
+      currentFolder={props.currentFolder}
+      currentNote={props.currentNote}
+      setCurrentNote={props.setCurrentNote}
+      isLoggedIn={props.isLoggedIn}
+      setIsLoggedIn={props.setIsLoggedIn}
+      currentNoteId={props.currentNoteId}
+      setCurrentNoteId={props.setCurrentNoteId}
+      />
       <List />
       <Content />
     </div>

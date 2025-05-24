@@ -29,12 +29,16 @@ class NoteBase(BaseModel):
 class NoteCreate(NoteBase):
     folder : str 
     favourite : bool = False
+    trash : bool = False
+    archive : bool = False
     pass
 
 class Note(NoteBase):
     id: int
     folder: str = "default"
     favourite: bool = False
+    trash: bool = False
+    archive: bool = False
     created_at: datetime
     updated_at: datetime
     user_id: int
