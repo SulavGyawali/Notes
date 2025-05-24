@@ -60,12 +60,15 @@ function App() {
   useEffect(() => {
     const fetchNote = async (noteId) => {
       try {
-        const response = await axios.get(`http://localhost:8000/notes/${noteId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await axios.get(
+          `http://localhost:8000/notes/${noteId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
         setCurrentNote(response.data);
       } catch (error) {
         console.error("Error fetching note:", error);
@@ -117,8 +120,12 @@ function App() {
 
   useEffect(() => {
     const handleRecentNotes = () => {
-      const recentNotes = notes.slice(-3);
-      setRecentNotes(recentNotes);
+      const recentNote = notes.slice(-3);
+      recentNote.sort(
+        (a, b) => new Date(b.updated_at) - new Date(a.updated_at)
+      );
+
+      setRecentNotes(recentNote);
     };
     handleRecentNotes();
   }, [notes]);

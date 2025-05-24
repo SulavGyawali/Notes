@@ -1,6 +1,6 @@
 import React from "react";
 import { LuPencil } from "react-icons/lu";
-import { IoSearch, IoArchiveOutline } from "react-icons/io5";
+import { IoSearch, IoArchiveOutline, IoExitOutline } from "react-icons/io5";
 import { IoMdAdd } from "react-icons/io";
 import { FiFileText, FiTrash } from "react-icons/fi";
 import { FaRegFolder, FaRegFolderOpen, FaRegHeart } from "react-icons/fa";
@@ -8,6 +8,28 @@ import { HiOutlineFolderAdd } from "react-icons/hi";
 import { IoIosMore } from "react-icons/io";
 
 const Menu = (props) => {
+  const [mouseInDots, setMouseInDots] = React.useState(false);
+  const [mouseInSettings, setMouseInSettings] = React.useState(false);
+  const [showSettings, setShowSettings] = React.useState(false);
+  const handleMouseLeaveDots = () => {
+    setMouseInDots(false);
+  };
+  const handleMouseEnterSettings = () => {
+    setMouseInSettings(true);
+  };
+  const handleMouseLeaveSettings = () => {
+    setMouseInSettings(false);
+  };
+  const handleMouseEnterDots = () => {
+    setMouseInDots(true);
+  };
+  React.useEffect(() => {
+    if (mouseInDots || mouseInSettings) {
+      setShowSettings(true);
+    } else {
+      setShowSettings(false);
+    }
+  }, [mouseInDots, mouseInSettings]);
   return (
     <div className="w-[20%] h-[100vh] flex flex-col  pt-7 font-medium">
       <div className="box1 w-full  font px-3 flex justify-between items-center">
@@ -117,7 +139,7 @@ const Menu = (props) => {
           </div>
         </div>
       </div>
-      <div className="box6 w-full flex mt-10 mx-auto justify-between items-center gap-2 font-medium rounded-3xl p-2">
+      <div className="box6 w-full flex mt-10 mx-auto justify-between items-center gap-2 font-medium rounded-3xl p-2 hover:bg-neutral-800 max-w-full">
         <div className="left flex items-center gap-2">
           <div className="left">
             <img
@@ -133,7 +155,27 @@ const Menu = (props) => {
         </div>
 
         <div className="right">
-          <IoIosMore className="text-2xl opacity-50" />
+          <IoIosMore
+            className="text-2xl opacity-50 hover:opacity-100 cursor-pointer"
+            onMouseEnter={handleMouseEnterDots}
+            onMouseLeave={handleMouseLeaveDots}
+          />
+        </div>
+        <div
+          className={`settings flex flex-col fixed left-[18vw] top-[calc(100vh-22vh)] bg-neutral-800 rounded-lg gap-2  transition-opacity duration-300 z-100 ${
+            showSettings ? "opacity-100" : "opacity-0"
+          }`}
+          onMouseEnter={handleMouseEnterSettings}
+          onMouseLeave={handleMouseLeaveSettings}
+        >
+          <span className="hover:bg-neutral-700 w-[100%] h-[50%] p-2 rounded-lg flex items-center gap-2 cursor-pointer">
+            <LuPencil className="text-sm" />
+            Edit User
+          </span>
+          <span className="hover:bg-neutral-700 w-[100%] h-[50%] p-2 rounded-lg flex items-center gap-2 cursor-pointer">
+            <IoExitOutline className="text-sm" />
+            Logout
+          </span>
         </div>
       </div>
     </div>
