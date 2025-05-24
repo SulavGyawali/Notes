@@ -3,8 +3,15 @@ import { MdOutlineCalendarMonth } from "react-icons/md";
 import { FaRegFolder, FaRegCopy } from "react-icons/fa";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { LuBold, LuItalic, LuUnderline } from "react-icons/lu";
+import Editor, { BtnBold, BtnItalic, Toolbar } from "react-simple-wysiwyg";
+import { useState } from "react";
 
 const Content = () => {
+  const [value, setValue] = useState("simple text");
+
+  function onChange(e) {
+    setValue(e.target.value);
+  }
   return (
     <div className="w-[55%] h-[100%] flex flex-col p-2 px-7  ">
       <div className="box1 mt-7 flex justify-between text-2xl font-medium">
@@ -32,7 +39,7 @@ const Content = () => {
       </div>
       <div className="separator w-full h-[0.5px] mx-auto bg-neutral-600 m-3"></div>
 
-      <div className="box4 flex justify-between items-center">
+      {/* <div className="box4 flex justify-between items-center">
         <div className="left flex items-center gap-5 ">
           <div className="frame1 flex gap-10">
             <span>Paragraph</span>
@@ -93,6 +100,24 @@ const Content = () => {
         dicta ex necessitatibus vitae rem quasi itaque, quod laudantium, iste
         autem ab minima perferendis repellat incidunt officia enim dolor
         doloribus quia provident sunt adipisci. Quas magni optio voluptates?
+      </div> */}
+      <div className="box4">
+        <Editor
+          value={value}
+          onChange={onChange}
+          containerProps={{
+            style: {
+              background: "none",
+              border: "none",
+            },
+          }}
+          style={{"background":"none"}}
+        >
+          <Toolbar>
+            <BtnBold />
+            <BtnItalic />
+          </Toolbar>
+        </Editor>
       </div>
     </div>
   );

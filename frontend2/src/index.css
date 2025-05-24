@@ -24,3 +24,13 @@
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
+
+.rsw-toolbar{
+ border-bottom: 1px solid rgba(255, 255, 255, 0.3) !important;
+ background: none !important;
+ color : white !important;
+}
+
+.rsw-editor{
+  color: white !important;
+}
