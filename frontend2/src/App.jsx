@@ -23,6 +23,7 @@ function App() {
   const [currentNote, setCurrentNote] = useState(null);
   const [currentNoteId, setCurrentNoteId] = useState(null);
   const [currentFolder, setCurrentFolder] = useState(null);
+  const [folderNotes, setFolderNotes] = useState([]);
 
   const handleCreateUser = async (newUser) => {
     try {
@@ -41,6 +42,34 @@ function App() {
       console.error("Error creating user:", error);
     }
   };
+
+  const handleFetchFolderNotes = async (folderName) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/notes/folder/${folderName}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      setFolderNotes(response.data);
+      setCurrentFolder(folderName);
+      setCurrentNote(null); 
+      setCurrentNoteId(null); 
+    }
+    catch (error) {
+      // handleAlert("Error fetching folder notes!", "error");
+      console.error("Error fetching folder notes:", error);
+    }
+  };
+
+  useEffect(() => {
+    if(currentFolder) {
+      handleFetchFolderNotes(currentFolder);
+    }
+  }, [currentFolder, token]);
 
   const handlefetchNotes = async () => {
     try {
@@ -235,6 +264,8 @@ function App() {
             setIsLoggedIn={setIsLoggedIn}
             currentNoteId={currentNoteId}
             setCurrentNoteId={setCurrentNoteId}
+            folderNotes={folderNotes}
+            
           />
         }
       />
