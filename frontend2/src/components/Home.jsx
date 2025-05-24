@@ -19,6 +19,7 @@ const Home = (props) => {
       setIsLoggedIn={props.setIsLoggedIn}
       currentNoteId={props.currentNoteId}
       setCurrentNoteId={props.setCurrentNoteId}
+      
       />
       <List 
       currentFolder={props.currentFolder}

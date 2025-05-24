@@ -43,21 +43,21 @@ async def read_note(note_id: int, db: Session = Depends(get_db), current_user: s
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Item not found")
     return note
 
-@router.get("/favourite", response_model=List[schemas.Note])
+@router.get("/folder/favourite", response_model=List[schemas.Note])
 async def read_favourite_notes(db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):
     notes = db.query(models.Notes).filter(models.Notes.user_id == current_user.id, models.Notes.favourite == True).all()
     if notes is []:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No favourite notes found")
     return notes
 
-@router.get("/archive", response_model=List[schemas.Note])
+@router.get("/folder/archive", response_model=List[schemas.Note])
 async def read_archived_notes(db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):
     notes = db.query(models.Notes).filter(models.Notes.user_id == current_user.id, models.Notes.archive == True).all()
     if notes is []:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No archived notes found")
     return notes
 
-@router.get("/trash", response_model=List[schemas.Note])
+@router.get("/folder/trash", response_model=List[schemas.Note])
 async def read_trash_notes(db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):
     notes = db.query(models.Notes).filter(models.Notes.user_id == current_user.id, models.Notes.trash == True).all()
     if notes is []:

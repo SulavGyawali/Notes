@@ -56,17 +56,15 @@ function App() {
       );
       setFolderNotes(response.data);
       setCurrentFolder(folderName);
-      setCurrentNote(null); 
-      setCurrentNoteId(null); 
-    }
-    catch (error) {
+      
+    } catch (error) {
       // handleAlert("Error fetching folder notes!", "error");
       console.error("Error fetching folder notes:", error);
     }
   };
 
   useEffect(() => {
-    if(currentFolder) {
+    if (currentFolder) {
       handleFetchFolderNotes(currentFolder);
     }
   }, [currentFolder, token]);
@@ -265,7 +263,6 @@ function App() {
             currentNoteId={currentNoteId}
             setCurrentNoteId={setCurrentNoteId}
             folderNotes={folderNotes}
-            
           />
         }
       />
