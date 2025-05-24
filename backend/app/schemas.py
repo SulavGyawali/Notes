@@ -27,10 +27,14 @@ class NoteBase(BaseModel):
     description: str
 
 class NoteCreate(NoteBase):
+    folder : str 
+    favourite : bool = False
     pass
 
 class Note(NoteBase):
     id: int
+    folder: str = "default"
+    favourite: bool = False
     created_at: datetime
     updated_at: datetime
     user_id: int
