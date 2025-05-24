@@ -17,6 +17,11 @@ async def create_notes(note: schemas.NoteCreate, db : Session = Depends(get_db),
     new_note.author = current_user.username
     new_note.title = note.title
     new_note.description = note.description
+    new_note.folder = note.folder 
+    new_note.favourite = note.favourite if note.favourite is not None else False
+    new_note.archive = note.archive if note.archive is not None else False
+    new_note.trash = note.trash if note.trash is not None else False
+    #
     print(new_note)
     db.add(new_note)
     db.commit()
@@ -37,6 +42,34 @@ async def read_note(note_id: int, db: Session = Depends(get_db), current_user: s
     if note is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Item not found")
     return note
+
+@router.get("/favourite", response_model=List[schemas.Note])
+async def read_favourite_notes(db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):
+    notes = db.query(models.Notes).filter(models.Notes.user_id == current_user.id, models.Notes.favourite == True).all()
+    if notes is []:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No favourite notes found")
+    return notes
+
+@router.get("/archive", response_model=List[schemas.Note])
+async def read_archived_notes(db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):
+    notes = db.query(models.Notes).filter(models.Notes.user_id == current_user.id, models.Notes.archive == True).all()
+    if notes is []:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No archived notes found")
+    return notes
+
+@router.get("/trash", response_model=List[schemas.Note])
+async def read_trash_notes(db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):
+    notes = db.query(models.Notes).filter(models.Notes.user_id == current_user.id, models.Notes.trash == True).all()
+    if notes is []:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No trashed notes found")
+    return notes
+
+@router.get("/folder/{folder_name}", response_model=List[schemas.Note])
+async def read_notes_by_folder(folder_name: str, db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):
+    notes = db.query(models.Notes).filter(models.Notes.user_id == current_user.id, models.Notes.folder == folder_name).all()
+    if notes is []:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No notes found in this folder")
+    return notes
 
 @router.delete("/{note_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_note(note_id: int, db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):
