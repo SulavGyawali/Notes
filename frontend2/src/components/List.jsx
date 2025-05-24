@@ -23,7 +23,7 @@ const List = () => {
             <span className="text-xl">Reflection on the Month of June</span>
           </div>
           <div className="info flex text-sm opacity-50 gap-10">
-            <span>31/12/2002</span>
+            <span>21/06/2022</span>
             <span className="max-h-full overflow-hidden whitespace-nowrap text-ellipsis">
               It i hard to believe that June is already over!
             </span>

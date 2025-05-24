@@ -8,14 +8,13 @@ import { useState } from "react";
 
 const Content = () => {
   const [value, setValue] = useState("simple text");
+  const [title, setTitle] = useState("Reflection on the Month of June");
 
-  function onChange(e) {
-    setValue(e.target.value);
-  }
+  
   return (
     <div className="w-[55%] h-[100%] flex flex-col p-2 px-7  ">
       <div className="box1 mt-7 flex justify-between text-2xl font-medium">
-        <span>Reflection on the Month of June</span>
+        <input type="text" value={title} className="w-full focus:outline-0" onChange={(e)=>setTitle(e.target.value)}/>
         <CiCircleMore className="opacity-50" />
       </div>
       <div className="box2 flex mt-5 gap-10 items-center">
@@ -104,7 +103,7 @@ const Content = () => {
       <div className="box4">
         <Editor
           value={value}
-          onChange={onChange}
+          onChange={(e)=>setValue(e.target.value)}
           containerProps={{
             style: {
               background: "none",
@@ -112,11 +111,10 @@ const Content = () => {
             },
           }}
           style={{"background":"none"}}
+          className="ql-editor"
+          // hideButtons = {["HTML mode"]}
         >
-          <Toolbar>
-            <BtnBold />
-            <BtnItalic />
-          </Toolbar>
+         
         </Editor>
       </div>
     </div>
