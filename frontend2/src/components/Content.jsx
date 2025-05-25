@@ -1,10 +1,11 @@
 import { CiCircleMore } from "react-icons/ci";
 import { MdOutlineCalendarMonth } from "react-icons/md";
 import { FaRegFolder, FaRegCopy } from "react-icons/fa";
-import { MdKeyboardArrowDown } from "react-icons/md";
-import { LuBold, LuItalic, LuUnderline } from "react-icons/lu";
-import Editor, { BtnBold, BtnItalic, Toolbar } from "react-simple-wysiwyg";
-import { useEffect, useState } from "react";
+import Editor from "react-simple-wysiwyg";
+import { use, useEffect, useState } from "react";
+import { FaRegHeart } from "react-icons/fa";
+import { FiTrash } from "react-icons/fi";
+import { IoArchiveOutline } from "react-icons/io5";
 
 const Content = (props) => {
   const [value, setValue] = useState("");
@@ -12,16 +13,45 @@ const Content = (props) => {
   const [date, setDate] = useState();
   const [folder, setFolder] = useState("");
   const [showSave, setShowSave] = useState(false);
+  const [showMore, setShowMore] = useState(true);
+  const [mouseInDots, setMouseInDots] = useState(false);
+  const [mouseInSettings, setMouseInSettings] = useState(false);
+  const [favourite, setFavourite] = useState(false);
+  const [archived, setArchived] = useState(false);
+  const [trash, setTrash] = useState(false);
+
+  const handleMouseLeaveDots = () => {
+    setMouseInDots(false);
+  };
+  const handleMouseEnterSettings = () => {
+    setMouseInSettings(true);
+  };
+  const handleMouseLeaveSettings = () => {
+    setMouseInSettings(false);
+  };
+  const handleMouseEnterDots = () => {
+    setMouseInDots(true);
+  };
+  useEffect(() => {
+    if (mouseInDots || mouseInSettings) {
+      setShowMore(true);
+    } else {
+      setShowMore(false);
+    }
+  }, [mouseInDots, mouseInSettings]);
 
   const handleSave = () => {
     if (props.currentNoteId) {
+      console.log("Saving existing note with ID:", props.currentNote.id);
+      console.log("favourite:", favourite);
+      console.log("archived:", archived);
+      console.log("trash:", trash);
       props.setUpdatedNote({
-        id: props.currentNote.id,
         title: title,
         description: value,
-        folder: folder,
-        created_at: props.currentNote.created_at,
-        updated_at: new Date().toISOString(),
+        favourite: favourite || false,
+        archive: archived || false,
+        trash: trash || false,
       });
       props.setCurrentNote({
         ...props.currentNote,
@@ -36,6 +66,9 @@ const Content = (props) => {
         title: title,
         description: value,
         folder: folder,
+        favourite: false,
+        archived: false,
+        trash: false,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       });
@@ -63,6 +96,10 @@ const Content = (props) => {
         new Date(props.currentNote.updated_at).toLocaleDateString("en-US")
       );
       setFolder(props.currentNote.folder || "Personal");
+      setFavourite(props.currentNote.favourite || false);
+      setArchived(props.currentNote.archive || false);
+      setTrash(props.currentNote.trash || false);
+      
     }
   }, [props.currentNote]);
 
@@ -70,14 +107,19 @@ const Content = (props) => {
     if (props.currentNote) {
       if (
         props.currentNote.title !== title ||
-        props.currentNote.description !== value
+        props.currentNote.description !== value ||
+        props.currentNote.favourite !== favourite ||
+        props.currentNote.archive !== archived ||
+        props.currentNote.trash !== trash
+        
       ) {
+        
         setShowSave(true);
       } else {
         setShowSave(false);
       }
     }
-  }, [title, value, props.currentNote]);
+  }, [title, value, props.currentNote, favourite, archived, trash]);
 
   return (
     <div className="w-[55%] h-[100%] flex flex-col p-2 px-7  ">
@@ -88,7 +130,45 @@ const Content = (props) => {
           className="w-full focus:outline-0"
           onChange={(e) => setTitle(e.target.value)}
         />
-        <CiCircleMore className="opacity-50" />
+        <CiCircleMore
+          className="text-2xl opacity-50 hover:opacity-100 cursor-pointer"
+          onMouseEnter={handleMouseEnterDots}
+          onMouseLeave={handleMouseLeaveDots}
+        />
+        <div
+          className={`more text-white w-[15vw] flex flex-col fixed right-[3vw] bottom-[calc(100vh-30vh)] bg-neutral-800 rounded-lg gap-2  transition-opacity text-lg duration-300   ${
+            showMore ? "opacity-100 z-100" : "opacity-0 -z-100"
+          }`}
+          onMouseEnter={handleMouseEnterSettings}
+          onMouseLeave={handleMouseLeaveSettings}
+        >
+          <div
+            className="fav hover:bg-neutral-700 w-[100%] h-[50%] p-2 pl-4 pt-4 rounded-lg flex items-center gap-2 cursor-pointer"
+            onClick={() => {
+              setFavourite(!favourite);
+            }}
+          >
+            <FaRegHeart className="text-xl " />
+            Add to Favourites
+          </div>
+          <div
+            className="archive  hover:bg-neutral-700 w-[100%] h-[50%] p-2 pl-4 rounded-lg flex items-center gap-2 cursor-pointer"
+            onClick={() => {
+              setArchived(!archived);
+            }}
+          >
+            <IoArchiveOutline className="text-xl " /> Archive
+          </div>
+          <div className="separator w-[95%] h-[0.5px] mx-auto bg-neutral-600"></div>
+          <div
+            className="delete hover:bg-neutral-700 w-[100%] h-[50%] p-2 pl-4 pb-4 rounded-lg flex items-center gap-2 cursor-pointer"
+            onClick={() => {
+              setTrash(!trash);
+            }}
+          >
+            <FiTrash className="text-xl " /> Delete
+          </div>
+        </div>
       </div>
       <div className="box2 flex mt-5 gap-10 items-center">
         <div className="date flex opacity-50 gap-5 items-center">

@@ -177,8 +177,8 @@ const Menu = (props) => {
           />
         </div>
         <div
-          className={`settings flex flex-col fixed left-[18vw] top-[calc(100vh-22vh)] bg-neutral-800 rounded-lg gap-2  transition-opacity duration-300 z-100 ${
-            showSettings ? "opacity-100" : "opacity-0"
+          className={`settings flex flex-col fixed left-[18vw] top-[calc(100vh-22vh)] bg-neutral-800 rounded-lg gap-2  transition-opacity duration-300  ${
+            showSettings ? "opacity-100 z-100" : "opacity-0 -z-100"
           }`}
           onMouseEnter={handleMouseEnterSettings}
           onMouseLeave={handleMouseLeaveSettings}

@@ -18,7 +18,7 @@ function App() {
   const [tokenType, setTokenType] = useState("");
   const [refreshToken, setRefreshToken] = useState("");
   const [notes, setNotes] = useState([]);
-  const [folders, setFolders] = useState([]);
+  const [folders, setFolders] = useState(["Personal"]);
   const [recentNotes, setRecentNotes] = useState([]);
   const [currentNote, setCurrentNote] = useState(null);
   const [currentNoteId, setCurrentNoteId] = useState(null);
@@ -82,9 +82,9 @@ function App() {
         title: updatedNote.title,
         description: updatedNote.description,
         folder: updatedNote.folder || "Personal",
-        favourite: updatedNote.favorite || false,
-        archived: updatedNote.archived || false,
-        trashed: updatedNote.trashed || false,
+        favourite: updatedNote.favourite || false,
+        archive: updatedNote.archive || false,
+        trash: updatedNote.trash || false,
       };
       const response = await axios.put(
         `http://localhost:8000/notes/${noteId}`,
@@ -211,15 +211,6 @@ function App() {
     }
   }, []);
 
-  useEffect(() => {
-    if(currentFolder){
-      const uniqueFolders = [...folders];
-      if (!uniqueFolders.includes(currentFolder)) {
-        uniqueFolders.push(currentFolder);
-        setFolders(uniqueFolders);
-      }
-    }
-  }, [currentFolder, folders]);
 
 
   useEffect(() => {

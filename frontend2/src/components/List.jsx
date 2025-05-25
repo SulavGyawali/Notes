@@ -25,7 +25,8 @@ const List = (props) => {
                 {new Date(notes.updated_at).toLocaleDateString("en-US")}
               </span>
               <span className="max-h-full overflow-hidden whitespace-nowrap text-ellipsis">
-                {notes.description || "No description available"}
+                {new DOMParser().parseFromString(notes.description, "text/html")
+                  .body.textContent || "No description available"}
               </span>
             </div>
           </div>
