@@ -13,6 +13,48 @@ const Content = (props) => {
   const [folder, setFolder] = useState("");
   const [showSave, setShowSave] = useState(false);
 
+  const handleSave = () => {
+    if (props.currentNoteId) {
+      props.setUpdatedNote({
+        id: props.currentNote.id,
+        title: title,
+        description: value,
+        folder: folder,
+        created_at: props.currentNote.created_at,
+        updated_at: new Date().toISOString(),
+      });
+      props.setCurrentNote({
+        ...props.currentNote,
+        title: title,
+        description: value,
+        folder: folder,
+        updated_at: new Date().toISOString(),
+      });
+      setShowSave(false);
+    } else {
+      props.setNewNote({
+        title: title,
+        description: value,
+        folder: folder,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      });
+      props.setCurrentNote({
+        title: title,
+        description: value,
+        folder: folder,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      });
+      props.setCurrentNoteId(null);
+      setTitle("");
+      setValue("");
+      setFolder("Personal");
+      setDate(new Date().toLocaleDateString("en-US"));
+      setShowSave(false);
+    }
+  };
+
   useEffect(() => {
     if (props.currentNote) {
       setTitle(props.currentNote.title);
@@ -23,6 +65,19 @@ const Content = (props) => {
       setFolder(props.currentNote.folder || "Personal");
     }
   }, [props.currentNote]);
+
+  useEffect(() => {
+    if (props.currentNote) {
+      if (
+        props.currentNote.title !== title ||
+        props.currentNote.description !== value
+      ) {
+        setShowSave(true);
+      } else {
+        setShowSave(false);
+      }
+    }
+  }, [title, value, props.currentNote]);
 
   return (
     <div className="w-[55%] h-[100%] flex flex-col p-2 px-7  ">
@@ -76,8 +131,9 @@ const Content = (props) => {
       <div className="confirm flex w-[100%] justify-end mt-5">
         <button
           className={`w-[10vw] h-[5vh] bg-white text-black text-xl font-medium cursor-pointer hover:bg-gray-200 ${
-            showSave ? "opacity-100" : "opacity-0"
+            showSave ? "" : "hidden"
           }`}
+          onClick={handleSave}
         >
           Save
         </button>

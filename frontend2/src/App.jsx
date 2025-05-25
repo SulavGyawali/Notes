@@ -24,6 +24,8 @@ function App() {
   const [currentNoteId, setCurrentNoteId] = useState(null);
   const [currentFolder, setCurrentFolder] = useState(null);
   const [folderNotes, setFolderNotes] = useState([]);
+  const [newNote, setNewNote] = useState(null);
+  const [updatedNote, setUpdatedNote] = useState(null);
 
   const handleCreateUser = async (newUser) => {
     try {
@@ -42,6 +44,78 @@ function App() {
       console.error("Error creating user:", error);
     }
   };
+
+  const handleAddNewNote = async (note) => {
+    try {
+      const data = {
+        title: note.title,
+        description: note.description,
+        folder: note.folder || "Personal",
+      };
+      const response = await axios.post("http://localhost:8000/notes", data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      setNotes((prevNotes) => [...prevNotes, response.data]);
+      setCurrentNote(response.data);
+      setCurrentNoteId(response.data.id);
+      // handleAlert("Note added successfully!", "success");
+    } catch (error) {
+      // handleAlert("Error adding note!", "error");
+      console.error("Error adding note:", error);
+    }
+  }
+
+  useEffect(() => {
+    if (newNote) {
+      handleAddNewNote(newNote);
+      setNewNote(null);
+    }
+  }
+  , [newNote]);
+
+  const handleUpdateNote = async (noteId, updatedNote) => {
+    try {
+      const data = {
+        title: updatedNote.title,
+        description: updatedNote.description,
+        folder: updatedNote.folder || "Personal",
+        favourite: updatedNote.favorite || false,
+        archived: updatedNote.archived || false,
+        trashed: updatedNote.trashed || false,
+      };
+      const response = await axios.put(
+        `http://localhost:8000/notes/${noteId}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      setNotes((prevNotes) =>
+        prevNotes.map((note) =>
+          note.id === noteId ? { ...note, ...response.data } : note
+        )
+      );
+      setCurrentNote(response.data);
+      // handleAlert("Note updated successfully!", "success");
+    } catch (error) {
+      // handleAlert("Error updating note!", "error");
+      console.error("Error updating note:", error);
+    }
+  }
+
+  useEffect(() => {
+    if (updatedNote) {
+      handleUpdateNote(currentNoteId, updatedNote);
+      setUpdatedNote(null);
+    }
+  }
+  , [updatedNote, currentNoteId]);
 
   const handleFetchFolderNotes = async (folderName) => {
     try {
@@ -274,6 +348,8 @@ function App() {
             currentNoteId={currentNoteId}
             setCurrentNoteId={setCurrentNoteId}
             folderNotes={folderNotes}
+            setNewNote={setNewNote}
+            setUpdatedNote={setUpdatedNote}
           />
         }
       />
