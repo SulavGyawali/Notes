@@ -49,6 +49,7 @@ const Content = (props) => {
       props.setUpdatedNote({
         title: title,
         description: value,
+        folder: folder,
         favourite: favourite || false,
         archive: archived || false,
         trash: trash || false,
@@ -205,7 +206,6 @@ const Content = (props) => {
           }}
           style={{ background: "none" }}
           className="ql-editor overflow-y-scroll scrollbar"
-          hideButtons={["HTML mode"]}
         ></Editor>
       </div>
       <div className="confirm flex w-[100%] justify-end mt-5">
