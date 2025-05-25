@@ -28,7 +28,14 @@ const Home = (props) => {
       setCurrentNoteId={props.setCurrentNoteId}
       currentNote={props.currentNote}
       />
-      <Content />
+      <Content 
+      currentNote={props.currentNote}
+      setCurrentNote={props.setCurrentNote}
+      currentFolder={props.currentFolder}
+      setCurrentFolder={props.setCurrentFolder}
+      currentNoteId={props.currentNoteId}
+      setCurrentNoteId={props.setCurrentNoteId}
+      />
     </div>
   )
 }
