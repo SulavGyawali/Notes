@@ -23,6 +23,17 @@ const Menu = (props) => {
   const handleMouseEnterDots = () => {
     setMouseInDots(true);
   };
+  const handleAddNewNote = () => {
+    props.setCurrentNoteId(null);
+    props.setCurrentNote({
+      title: "",
+      description: "",
+      folder: "Personal",
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    });
+    props.setCurrentFolder("Personal");
+  };
   React.useEffect(() => {
     if (mouseInDots || mouseInSettings) {
       setShowSettings(true);
@@ -30,6 +41,7 @@ const Menu = (props) => {
       setShowSettings(false);
     }
   }, [mouseInDots, mouseInSettings]);
+
   return (
     <div className="w-[20%] h-[100vh] flex flex-col  pt-7 font-medium">
       <div className="box1 w-full  font px-3 flex justify-between items-center">
@@ -44,7 +56,10 @@ const Menu = (props) => {
         </div>
       </div>
       <div className="box2  w-full flex justify-center items-center h-[5%] mt-5 ">
-        <div className="newnote flex h-full w-[80%] bg-neutral-800 justify-center items-center gap-1 font-medium">
+        <div
+          className="newnote flex h-full w-[80%] bg-neutral-800 justify-center items-center gap-1 font-medium cursor-pointer hover:bg-neutral-700 transition-all duration-300"
+          onClick={handleAddNewNote}
+        >
           <IoMdAdd className="text-xl " />
           <span>New Note</span>
         </div>

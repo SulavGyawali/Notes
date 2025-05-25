@@ -34,6 +34,11 @@
   display: none;
 }
 
+.rsw-ce{
+  height: 55vh !important;
+  max-height: 100% !important;
+}
+
 .rsw-btn{
   color: white !important;
 }

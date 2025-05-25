@@ -138,6 +138,17 @@ function App() {
   }, []);
 
   useEffect(() => {
+    if(currentFolder){
+      const uniqueFolders = [...folders];
+      if (!uniqueFolders.includes(currentFolder)) {
+        uniqueFolders.push(currentFolder);
+        setFolders(uniqueFolders);
+      }
+    }
+  }, [currentFolder, folders]);
+
+
+  useEffect(() => {
     if (!isLoggedIn) {
       navigate("/login");
     } else {
