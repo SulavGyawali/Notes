@@ -15,7 +15,7 @@ const Content = (props) => {
   useEffect(() => {
     if (props.currentNote) {
       setTitle(props.currentNote.title);
-      setValue(props.currentNote.content);
+      setValue(props.currentNote.description);
       setDate(new Date(props.currentNote.updated_at).toLocaleDateString("en-US"));
       setFolder(props.currentNote.folder || "Personal");
     }
