@@ -36,7 +36,10 @@ const Login = (props) => {
   };
   return (
     <div className="w-screen h-screen flex flex-col gap-10 justify-center items-center text-white">
-      <div className="txt text-6xl custom-kaushan">Nowted</div>
+      <div className="txt text-6xl  flex flex-col justify-center items-center gap-2">
+        <span className="custom-kaushan">Notwed</span>
+        <span className="text-lg">Notes, Just Smarter.</span>
+      </div>
       <div className="login flex flex-col gap-3">
         <div className="email w-[20vw] h-[5vh] border flex justify-between items-center">
           <FiUser className="text-2xl ml-2" />

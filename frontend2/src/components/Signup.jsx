@@ -1,6 +1,11 @@
 import React from "react";
 import { FaRegUser } from "react-icons/fa";
 import { MdAlternateEmail } from "react-icons/md";
+import {
+  IoLockClosedOutline,
+  IoEyeOffOutline,
+  IoEyeOutline,
+} from "react-icons/io5";
 
 const Signup = () => {
   return (
@@ -16,32 +21,55 @@ const Signup = () => {
           <div className="first flex flex-col gap-2 w-full">
             <span className="opacity-50 text-xl">First Name</span>
             <div className="input w-full border h-[6vh] flex justify-center items-center">
-              <FaRegUser  className="text-xl m-2"/>
-              <input type="text" className="h-full w-full focus:outline-0 text-xl" />
+              <FaRegUser className="text-xl m-2" />
+              <input
+                type="text"
+                className="h-full w-full focus:outline-0 text-xl"
+              />
             </div>
           </div>
           <div className="last flex flex-col gap-2 w-full">
             <span className="opacity-50 text-xl">Last Name</span>
             <div className="input w-full border h-[6vh] flex justify-center items-center">
-              <FaRegUser  className="text-xl m-2"/>
-              <input type="text" className="h-full w-full focus:outline-0 text-xl" />
+              <FaRegUser className="text-xl m-2" />
+              <input
+                type="text"
+                className="h-full w-full focus:outline-0 text-xl"
+              />
             </div>
           </div>
         </div>
         <div className="email flex flex-col gap-2 w-full">
           <span className="opacity-50">Email</span>
           <div className="input w-full border h-[6vh] flex justify-center items-center">
-              <MdAlternateEmail   className="text-xl m-2"/>
-              <input type="text" className="h-full w-full focus:outline-0 text-xl" />
-            </div>
+            <MdAlternateEmail className="text-xl m-2" />
+            <input
+              type="text"
+              className="h-full w-full focus:outline-0 text-xl"
+            />
+          </div>
         </div>
         <div className="password flex flex-col gap-2 w-full">
           <span className="opacity-50">Password</span>
-          <input type="text" className="w-full border h-[6vh]  " />
+          <div className="input w-full border h-[6vh] flex justify-center items-center">
+            <IoLockClosedOutline className="text-xl m-2" />
+            <input
+              type="text"
+              className="h-full w-full focus:outline-0 text-xl"
+            />
+            <IoEyeOutline className="text-xl m-2" />
+          </div>
         </div>
         <div className="confirm flex flex-col gap-2 w-full">
           <span className="opacity-50">Password</span>
-          <input type="text" className="w-full border h-[6vh]  " />
+          <div className="input w-full border h-[6vh] flex justify-center items-center">
+            <IoLockClosedOutline className="text-xl m-2" />
+            <input
+              type="text"
+              className="h-full w-full focus:outline-0 text-xl"
+            />
+            <IoEyeOutline className="text-xl m-2" />
+          </div>
         </div>
         <div className="submit">
           <button className="w-[20vw] h-[6vh] bg-white flex justify-center items-center text-black text-xl font-medium cursor-pointer hover:bg-gray-200">
