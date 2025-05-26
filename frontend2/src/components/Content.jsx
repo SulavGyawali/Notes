@@ -66,7 +66,7 @@ const Content = (props) => {
       props.setNewNote({
         title: title,
         description: value,
-        folder: folder,
+        folder: props.currentFolder || "Personal",
         favourite: false,
         archived: false,
         trash: false,

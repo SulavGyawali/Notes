@@ -39,9 +39,9 @@ app.add_middleware(
 while True:
     try:
         conn = pg.connect(
-            dbname="notes",
-            user="admin",
-            password="1",
+            dbname=POSTGRES_DB,
+            user=POSTGRES_USER,
+            password=POSTGRES_PASSWORD,
             host="localhost",
             port="5432",
             cursor_factory=RealDictCursor,

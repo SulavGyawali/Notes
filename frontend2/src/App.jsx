@@ -9,6 +9,7 @@ import {
 import Home from "./components/Home";
 import Login from "./components/Login";
 import axios from "axios";
+import Signup from "./components/Signup";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -26,6 +27,7 @@ function App() {
   const [folderNotes, setFolderNotes] = useState([]);
   const [newNote, setNewNote] = useState(null);
   const [updatedNote, setUpdatedNote] = useState(null);
+  const [signup, setSignup] = useState(true);
 
   const handleCreateUser = async (newUser) => {
     try {
@@ -50,7 +52,7 @@ function App() {
       const data = {
         title: note.title,
         description: note.description,
-        folder: note.folder || "Personal",
+        folder: note.folder ,
       };
       const response = await axios.post("http://localhost:8000/notes", data, {
         headers: {
@@ -215,6 +217,10 @@ function App() {
 
   useEffect(() => {
     if (!isLoggedIn) {
+      if(signup) {
+        navigate("/register");
+      }
+      else
       navigate("/login");
     } else {
       navigate("/");
@@ -353,6 +359,19 @@ function App() {
             setTokenType={setTokenType}
             setRefreshToken={setRefreshToken}
             isLoggedIn={isLoggedIn}
+          />
+        }
+      />
+      <Route
+        path="/register"
+        element={
+          <Signup
+            setIsLoggedIn={setIsLoggedIn}
+            setToken={setToken}
+            setTokenType={setTokenType}
+            setRefreshToken={setRefreshToken}
+            isLoggedIn={isLoggedIn}
+            handleCreateUser={handleCreateUser}
           />
         }
       />
