@@ -18,7 +18,6 @@ POSTGRES_PORT = os.getenv("POSTGRES_PORT")
 POSTGRES_DB = os.getenv("POSTGRES_DB")
 POSTGRES_USER = os.getenv("POSTGRES_USER")
 POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD")
-
 # print(POSTGRES_USER)
 
 app = FastAPI()
@@ -42,7 +41,7 @@ while True:
             dbname=POSTGRES_DB,
             user=POSTGRES_USER,
             password=POSTGRES_PASSWORD,
-            host="localhost",
+            host=POSTGRES_HOST,
             port="5432",
             cursor_factory=RealDictCursor,
         )
