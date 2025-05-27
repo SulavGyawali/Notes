@@ -8,6 +8,19 @@ import {
 } from "react-icons/io5";
 
 const Signup = () => {
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        // save the file to ../assets/users_profiles
+        
+
+        console.log("Image uploaded:", reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  }
   return (
     <div className="w-screen h-screen flex gap-10 justify-between items-center text-white">
       <div className="txt text-6xl  flex flex-col justify-center items-center w-[40%] h-full bg-white text-black gap-2">
@@ -17,21 +30,22 @@ const Signup = () => {
       <div className="signup h-[90%] w-[45%] flex flex-col  items-center gap-5 mx-auto p-20 pt-10 rounded-2xl">
         <div className="create w-full  flex justify-between items-center mb-5">
           <span className="text-4xl w-full">Create New Account</span>
-          <div class="flex flex-col items-center gap-2">
+          <div className="flex flex-col items-center gap-2">
             <label
-              for="image-upload"
-              class="flex flex-col items-center justify-center border-2 border-dashed cursor-pointer bg-gray-50 hover:bg-gray-100 w-[10vw] h-[7vh]"
+              htmlFor="image-upload"
+              className="flex flex-col items-center justify-center border-2 border-dashed cursor-pointer bg-gray-50 hover:bg-gray-100 w-[10vw] h-[7vh]"
             >
-              <p class="flex flex-col justify-center items-center text-sm text-gray-500">
-                <span class="font-semibold">Click to upload</span> or drag and
+              <p className="flex flex-col justify-center items-center text-sm text-gray-500">
+                <span className="font-semibold">Click to upload</span> or drag and
                 drop
               </p>
 
               <input
                 id="image-upload"
                 type="file"
-                class="hidden"
+                className="hidden"
                 accept="image/*"
+                onChange={handleImageUpload}
               />
             </label>
             <span className="text-lg opacity-50">Profile Picture</span>
