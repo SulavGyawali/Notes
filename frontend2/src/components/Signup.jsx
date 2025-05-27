@@ -15,8 +15,29 @@ const Signup = () => {
         <span className="text-lg">Notes, Just Smarter.</span>
       </div>
       <div className="signup h-[90%] w-[45%] flex flex-col  items-center gap-5 mx-auto p-20 pt-10 rounded-2xl">
-        <div className="create w-full text-5xl flex">Create New Account</div>
-        <div className="picture">Profile Picture</div>
+        <div className="create w-full  flex justify-between items-center mb-5">
+          <span className="text-4xl w-full">Create New Account</span>
+          <div class="flex flex-col items-center gap-2">
+            <label
+              for="image-upload"
+              class="flex flex-col items-center justify-center border-2 border-dashed cursor-pointer bg-gray-50 hover:bg-gray-100 w-[10vw] h-[7vh]"
+            >
+              <p class="flex flex-col justify-center items-center text-sm text-gray-500">
+                <span class="font-semibold">Click to upload</span> or drag and
+                drop
+              </p>
+
+              <input
+                id="image-upload"
+                type="file"
+                class="hidden"
+                accept="image/*"
+              />
+            </label>
+            <span className="text-lg opacity-50">Profile Picture</span>
+          </div>
+        </div>
+
         <div className="username flex w-full justify-between items-center gap-[20%]">
           <div className="first flex flex-col gap-2 w-full">
             <span className="opacity-50 text-xl">First Name</span>
