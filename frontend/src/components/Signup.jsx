@@ -1,127 +1,164 @@
-import React from "react";
 import { useState } from "react";
+import { FaRegUser } from "react-icons/fa";
+import { MdAlternateEmail } from "react-icons/md";
+import axios from "axios";
+import {
+  IoLockClosedOutline,
+  IoEyeOffOutline,
+  IoEyeOutline,
+} from "react-icons/io5";
 
 const Signup = (props) => {
-  const [repassword, setRepassword] = useState("");
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    if (name === "username") {
-      setUsername(value);
-    } else if (name === "email") {
-      setEmail(value);
-    } else if (name === "password") {
-      setPassword(value);
-    } else if (name === "repassword") {
-      setRepassword(value);
+  const handleSignup = async () => {
+    try {
+      if (password !== confirmPassword) {
+        props.handleAlert("Passwords do not match!", "error");
+        return;
+      }
+      const data = {
+        username: `${firstName} ${lastName}`,
+        email: email,
+        password: password,
+      };
+      console.log("Creating user:", data);
+      const response = await axios.post("http://localhost:8000/users", data);
+      console.log("User created:", response.data);
+      props.handleAlert("User Created Successfully!", "success");
+    } catch (error) {
+      props.handleAlert("Error creating user!", "error");
+      console.error("Error creating user:", error);
     }
-  };
-
-  const handleShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const handleClick = (e) => {
-    e.preventDefault();
-    if (password !== repassword) {
-      props.handleAlert("Passwords do not match!", "error");
-      return;
-    }
-    const newUser = {
-      username: username,
-      email: email,
-      password: password,
-    };
-
+    setEmail("");
+    setFirstName("");
+    setLastName("");
+    setPassword("");
+    setConfirmPassword("");
+    props.setIsLoggedIn(false);
     props.setSignup(false);
-    props.setNewUser(newUser);
-    props.setUserName(email);
-    props.setPassword(password);
-    props.handleCreateUser(newUser);
-    props.handleAlert("User Created Successfully!", "success");
   };
 
   return (
-    <div className="h-[90vh] w-[100vw] flex justify-center items-center">
-      <div className="box  w-[35%]  flex flex-col justify-between items-center rounded-2xl shadow-lg text-white p-4 m-3 border-3 border-white bg-indigo-500 mt-0">
-        <div className="top pt-3">
-          <span className="text-3xl font-medium"> Signup </span>
+    <div className="w-screen h-screen flex gap-10 justify-between items-center text-white">
+      <div className="signup h-[90%] w-[45%] flex flex-col justify-center items-center gap-5 mx-auto p-20 pt-10 rounded-2xl">
+        <div className="create w-full  flex justify-between items-center mb-5">
+          <span className="text-4xl w-full flex justify-center">
+            Create a New Account
+          </span>
         </div>
-        <div className="mid text-white flex flex-col w-full text-lg gap-4">
-          <div className="username flex flex-col gap-2">
-            <span>Username</span>
-            <input
-              type="text"
-              placeholder="Username"
-              className="w-full h-10 rounded-2xl p-2 outline-none decoration-white border-2 border-white text-xl focus:border-2 focus:outline-none focus:bg-indigo-400"
-              value={username}
-              name="username"
-              onChange={handleChange}
-            />
-          </div>
-          <div className="email flex flex-col gap-2">
-            <span>Email</span>
-            <input
-              type="text"
-              placeholder="Email"
-              className="w-full h-10 rounded-2xl p-2 outline-none decoration-white border-2 border-white text-xl focus:border-2 focus:outline-none focus:bg-indigo-400"
-              value={email}
-              name="email"
-              onChange={handleChange}
-            />
-          </div>
-          <div className="password flex flex-col">
-            <div className="top flex justify-between items-center">
-              <span>Password</span>
-              <span className=" bg-indigo-500"></span>
-              <label className="show flex ml-5 items-center gap-2 cursor-pointer bg-indigo-500">
-                <input
-                  type="checkbox"
-                  name=""
-                  id=""
-                  className="w-2 h-2 rounded-full appearance-none bg-indigo-200 checked:ring-3 checked:ring-indigo-700 cursor-pointer"
-                  onClick={handleShowPassword}
-                />
-                <span
-                  className={`${
-                    showPassword ? "text-white" : "text-indigo-200"
-                  }`}
-                >
-                  Show Password
-                </span>
-              </label>
-            </div>
 
+        <div className="username flex w-full justify-between items-center gap-[20%]">
+          <div className="first flex flex-col gap-2 w-full">
+            <div className="input w-full border h-[6vh] flex justify-center items-center">
+              <FaRegUser className="text-xl m-2" />
+              <input
+                type="text"
+                className="h-full w-full focus:outline-0 text-xl"
+                placeholder="First Name"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="last flex flex-col gap-2 w-full">
+            <div className="input w-full border h-[6vh] flex justify-center items-center">
+              <FaRegUser className="text-xl m-2" />
+              <input
+                type="text"
+                className="h-full w-full focus:outline-0 text-xl"
+                placeholder="Last Name"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="email flex flex-col gap-2 w-full">
+          <div className="input w-full border h-[6vh] flex justify-center items-center">
+            <MdAlternateEmail className="text-xl m-2" />
             <input
-              type={`${showPassword ? "text" : "password"}`}
-              placeholder="Password"
-              className="w-full h-10 rounded-2xl p-2 outline-none decoration-white border-2 border-white text-xl focus:border-2 focus:outline-none focus:bg-indigo-400 my-2"
-              value={password}
-              name="password"
-              onChange={handleChange}
-            />
-            <input
-              type={`${showPassword ? "text" : "password"}`}
-              placeholder="Re enter password"
-              className="w-full h-10 rounded-2xl p-2 outline-none decoration-white border-2 border-white text-xl focus:border-2 focus:outline-none focus:bg-indigo-400 my-2"
-              value={repassword}
-              name="repassword"
-              onChange={handleChange}
+              type="text"
+              className="h-full w-full focus:outline-0 text-xl"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
         </div>
-        <div className="bottom flex justify-around items-center w-full my-5">
+        <div className="password flex flex-col gap-2 w-full">
+          <div className="input w-full border h-[6vh] flex justify-center items-center">
+            <IoLockClosedOutline className="text-xl m-2" />
+            <input
+              type={`${showPassword ? "text" : "password"}`}
+              className="h-full w-full focus:outline-0 text-xl"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            {showPassword ? (
+              <IoEyeOutline
+                className="text-2xl mr-2 cursor-pointer opacity-50 hover:opacity-100"
+                onClick={() => setShowPassword(false)}
+              />
+            ) : (
+              <IoEyeOffOutline
+                className="text-2xl mr-2 cursor-pointer opacity-50 hover:opacity-100"
+                onClick={() => setShowPassword(true)}
+              />
+            )}
+          </div>
+        </div>
+        <div className="confirm flex flex-col gap-2 w-full">
+          <div className="input w-full border h-[6vh] flex justify-center items-center">
+            <IoLockClosedOutline className="text-xl m-2" />
+            <input
+              type={`${showPassword ? "text" : "password"}`}
+              className="h-full w-full focus:outline-0 text-xl"
+              placeholder="Confirm Password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+            {showPassword ? (
+              <IoEyeOutline
+                className="text-2xl mr-2 cursor-pointer opacity-50 hover:opacity-100"
+                onClick={() => setShowPassword(false)}
+              />
+            ) : (
+              <IoEyeOffOutline
+                className="text-2xl mr-2 cursor-pointer opacity-50 hover:opacity-100"
+                onClick={() => setShowPassword(true)}
+              />
+            )}
+          </div>
+        </div>
+        <div className="submit">
           <button
-            className="bg-indigo-700 border-2 p-2 w-[20vh] rounded-2xl text-xl font-medium hover:bg-indigo-400 transition 200 ease-in-out cursor-pointer "
-            onClick={handleClick}
+            className="w-[20vw] h-[6vh] bg-white flex justify-center items-center text-black text-xl font-medium cursor-pointer hover:bg-gray-200"
+            onClick={handleSignup}
           >
-            Sign up
+            Sign Up
           </button>
         </div>
+      </div>
+      <div className="txt text-6xl  flex flex-col justify-center items-center w-[40%] h-full bg-white text-black gap-2">
+        <span className="custom-kaushan">Nowted</span>
+        <span className="text-lg">Notes, Just Smarter.</span>
+        <span
+          className="text-lg underline-offset-2 underline cursor-pointer"
+          onClick={() => {
+            console.log("Switching to login");
+            props.setSignup(false);
+            props.setIsLoggedIn(false);
+          }}
+        >
+          Have an account?
+        </span>
       </div>
     </div>
   );

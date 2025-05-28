@@ -1,106 +1,299 @@
+import { useState, useEffect, use } from "react";
 import "./App.css";
-import Navbar from "./components/Navbar";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import { useState, useEffect, useRef } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useNavigate,
+} from "react-router-dom";
 import Home from "./components/Home";
-import axios from "axios";
 import Login from "./components/Login";
+import axios from "axios";
 import Signup from "./components/Signup";
-import Popup from "./components/Popup";
 import Alert from "./components/Alert";
 
 function App() {
+  const [count, setCount] = useState(0);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [signup, setSignup] = useState(false);
-
-  const [notes, setNotes] = useState([]);
-  const [newNote, setNewNote] = useState({
-    title: "",
-    description: "",
-  });
+  const navigate = useNavigate();
   const [token, setToken] = useState("");
-  const [tokeType, setTokenType] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [newUser, setNewUser] = useState({
-    username: "",
-    email: "",
-    password: "",
-  });
-  const pop = useRef(null);
-  const [showPopup, setShowPopup] = useState(false);
-  const [popType, setPopType] = useState("");
-  const [logout, setLogout] = useState(false);
-  const [noteId, setNoteId] = useState(null);
-  const [editId, setEditId] = useState(null);
-  const [editNote, setEditNote] = useState(null);
-  const [userName, setUserName] = useState("");
+  const [tokenType, setTokenType] = useState("");
   const [refreshToken, setRefreshToken] = useState("");
-  const [unauthorized, setUnauthorized] = useState(false);
-  const [alert, setAlert] = useState(false);
+  const [notes, setNotes] = useState([]);
+  const [folders, setFolders] = useState(["Personal"]);
+  const [recentNotes, setRecentNotes] = useState([]);
+  const [currentNote, setCurrentNote] = useState(null);
+  const [currentNoteId, setCurrentNoteId] = useState(null);
+  const [currentFolder, setCurrentFolder] = useState(null);
+  const [folderNotes, setFolderNotes] = useState([]);
+  const [newNote, setNewNote] = useState(null);
+  const [updatedNote, setUpdatedNote] = useState(null);
+  const [signup, setSignup] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [logout, setLogout] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
-  const [alertType, setAlertType] = useState("success");
+  const [alertType, setAlertType] = useState("");
 
-  const handleAlert = (message, type) => {
-    
-    setAlertMessage(message);
-    setAlertType(type);
-    setAlert(true);
-    
-    setTimeout(() => {
-      setAlert(false);
-    }, 3000);
-
-  };
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (pop.current && !pop.current.contains(event.target)) {
-        setShowPopup(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [showPopup]);
-
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-      if (event.key === "Escape") {
-        setShowPopup(false);
-      }
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [showPopup]);
-
-  const handleLogin = async () => {
+  const handleCreateUser = async (newUser) => {
     try {
       const data = {
-        email: email,
-        password: password,
+        username: newUser.username,
+        email: newUser.email,
+        password: newUser.password,
       };
-      const response = await axios.post(
-        "http://127.0.0.1:8000/auth/login",
-        data
-      );
-      setToken(response.data.access_token);
-      setTokenType(response.data.token_type);
-      setRefreshToken(response.data.refresh_token);
-      setIsLoggedIn(true);
-      localStorage.setItem("token", response.data.access_token);
-      localStorage.setItem("refresh_token", response.data.refresh_token);
-      handleAlert("Logged in Successfully!", "success");
-      setEmail("");
-      setPassword("");
+      console.log("Creating user:", data);
+      console.log("new user:", newUser);
+      const response = await axios.post("http://localhost:8000/users", data);
+      console.log("User created:", response.data);
+      handleAlert("User Created Successfully!", "success");
     } catch (error) {
-      handleAlert("Invalid credentials!", "error");
-      console.error("Error logging in:", error);
+      handleAlert("Error creating user!", "error");
+      console.error("Error creating user:", error);
     }
   };
+
+  const handleAlert = (message, type) => {
+    setShowAlert(true);
+    setAlertMessage(message);
+    setAlertType(type);
+    setTimeout(() => {
+      setShowAlert(false);
+    }, 3000);
+  }
+
+  const getCurrentUser = async () => {
+    try {
+      const response = await axios.get("http://localhost:8000/users/current", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      setCurrentUser(response.data);
+    } catch (error) {
+      console.error("Error fetching current user:", error);
+    }
+  }
+
+  useEffect(() => {
+    if (token) {
+      getCurrentUser();
+    }
+  }
+  , [token]);
+
+  useEffect(() => {
+    if(logout) {
+      setIsLoggedIn(false);
+      setToken("");
+      setTokenType("");
+      setRefreshToken("");
+      setNotes([]);
+      setFolders(["Personal"]);
+      setRecentNotes([]);
+      setCurrentNote(null);
+      setCurrentNoteId(null);
+      setCurrentFolder(null);
+      setFolderNotes([]);
+      localStorage.removeItem("token");
+      localStorage.removeItem("refresh_token");
+      navigate("/login");
+      handleAlert("Logged out successfully!", "success");
+    }
+  }, [logout]);
+
+  const handleAddNewNote = async (note) => {
+    try {
+      const data = {
+        title: note.title,
+        description: note.description,
+        folder: note.folder ,
+      };
+      const response = await axios.post("http://localhost:8000/notes", data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      setNotes((prevNotes) => [...prevNotes, response.data]);
+      setCurrentNote(response.data);
+      setCurrentNoteId(response.data.id);
+      handleAlert("Note added successfully!", "success");
+    } catch (error) {
+      handleAlert("Error adding note!", "error");
+      console.error("Error adding note:", error);
+    }
+  }
+
+  useEffect(() => {
+    if (newNote) {
+      handleAddNewNote(newNote);
+      setNewNote(null);
+    }
+  }
+  , [newNote]);
+
+  const handleUpdateNote = async (noteId, updatedNote) => {
+    try {
+      const data = {
+        title: updatedNote.title,
+        description: updatedNote.description,
+        folder: updatedNote.folder || "Personal",
+        favourite: updatedNote.favourite || false,
+        archive: updatedNote.archive || false,
+        trash: updatedNote.trash || false,
+      };
+      const response = await axios.put(
+        `http://localhost:8000/notes/${noteId}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      setNotes((prevNotes) =>
+        prevNotes.map((note) =>
+          note.id === noteId ? { ...note, ...response.data } : note
+        )
+      );
+      setCurrentNote(response.data);
+      handleAlert("Note updated successfully!", "success");
+    } catch (error) {
+      handleAlert("Error updating note!", "error");
+      console.error("Error updating note:", error);
+    }
+  }
+
+  useEffect(() => {
+    if (updatedNote) {
+      handleUpdateNote(currentNoteId, updatedNote);
+      setUpdatedNote(null);
+    }
+  }
+  , [updatedNote, currentNoteId]);
+
+  const handleFetchFolderNotes = async (folderName) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/notes/folder/${folderName}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      setFolderNotes(response.data);
+      setCurrentFolder(folderName);
+      
+    } catch (error) {
+      handleAlert("Error fetching folder notes!", "error");
+      console.error("Error fetching folder notes:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (currentFolder) {
+      handleFetchFolderNotes(currentFolder);
+    }
+  }, [currentFolder, token]);
+
+  const handlefetchNotes = async () => {
+    try {
+      const response = await axios.get("http://localhost:8000/notes", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      setNotes(response.data);
+    } catch (error) {
+      handleAlert("Error fetching notes!", "error");
+      console.error("Error fetching notes:", error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchNote = async (noteId) => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8000/notes/${noteId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        setCurrentNote(response.data);
+      } catch (error) {
+        console.error("Error fetching note:", error);
+      }
+    };
+    if (currentNoteId) {
+      fetchNote(currentNoteId);
+    }
+  }, [currentNoteId]);
+
+  useEffect(() => {
+    if (currentNote) {
+      if (currentNote.folder) {
+        setCurrentFolder(currentNote.folder);
+      } else {
+        setCurrentFolder(null);
+      }
+    }
+  }, [currentNote]);
+
+  useEffect(() => {
+    const updateFolders = () => {
+      const uniqueFolders = [...folders];
+      notes.forEach((note) => {
+        if (note.folder && !uniqueFolders.includes(note.folder)) {
+          uniqueFolders.push(note.folder);
+        }
+      });
+
+      setFolders(uniqueFolders);
+    };
+    updateFolders();
+  }, [notes]);
+  useEffect(() => {
+    // Check if user is logged in
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      if(signup) {
+        navigate("/register");
+      }
+      else
+      navigate("/login");
+    } else {
+      navigate("/");
+    }
+  }, [isLoggedIn, navigate, signup]);
+
+  useEffect(() => {
+    const handleRecentNotes = () => {
+      const recentNote = notes.slice(-3);
+      recentNote.sort(
+        (a, b) => new Date(b.updated_at) - new Date(a.updated_at)
+      );
+
+      setRecentNotes(recentNote);
+    };
+    handleRecentNotes();
+  }, [notes]);
 
   useEffect(() => {
     const handleRefreshToken = async () => {
@@ -148,12 +341,12 @@ function App() {
         if (response.status === 200) {
           setToken(storedToken);
           setIsLoggedIn(true);
+          setCurrentFolder("Personal");
         }
       } catch (error) {
         const refresh = localStorage.getItem("refresh_token");
         if (refresh) {
           try {
-            console.log("Refreshing token...");
             const response = await axios.get(
               "http://localhost:8000/auth/refresh-token",
 
@@ -164,8 +357,9 @@ function App() {
                 },
               }
             );
-            console.log(response.data.access_token);
+
             setToken(response.data.access_token);
+
             setIsLoggedIn(true);
           } catch (error) {
             console.error("Error refreshing token:", error);
@@ -188,206 +382,71 @@ function App() {
     }
   }, [token]);
 
-  useEffect(() => {
-    try {
-      if (newNote.title && newNote.description) {
-        const addNote = async () => {
-          try {
-            const response = await axios.post(
-              "http://localhost:8000/notes",
-              newNote,
-              {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                  "Content-Type": "application/json",
-                },
-              }
-            );
-
-            setNotes((prevNotes) => [...prevNotes, response.data]);
-            handleAlert("Note Added Successfully!", "success");
-          } catch (error) {
-            handleAlert("Error adding note!", "error");
-            console.error("Error adding note:", error);
-            console.log("Error message:", error.message);
-            if (error.mesage === "Request failed with status code 401") {
-              setUnauthorized(true);
-              setLogout(true);
-              setIsLoggedIn(false);
-            }
-          }
-        };
-        addNote();
-      }
-      
-    } catch (error) {
-      console.error("Error in adding note:", error);
-      handleAlert("Error in adding note!", "error");
-      setIsLoggedIn(false);
-      setToken("");
-    }
-  }, [newNote]);
-
-  useEffect(() => {
-    if (logout) {
-      localStorage.removeItem("token");
-      localStorage.removeItem("refresh_token");
-      setIsLoggedIn(false);
-      setLogout(false);
-      setEmail("");
-      setPassword("");
-      console.log(email, password)
-      handleAlert("Logged out Successfully!", "success");
-    }
-  }, [logout]);
-
-  const handleDeleteNote = async (noteId) => {
-    try {
-      const response = await axios.delete(
-        `http://localhost:8000/notes/${noteId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      console.log("Note deleted:", response.data);
-      setNotes((prevNotes) => prevNotes.filter((note) => note.id !== noteId));
-      handleAlert("Note Deleted Successfully!", "success");
-    } catch (error) {
-      handleAlert("Error deleting note!", "error");
-      console.error("Error deleting note:", error);
-    }
-  };
-
-  const handlefetchNotes = async () => {
-    try {
-      const response = await axios.get("http://localhost:8000/notes", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-      setNotes(response.data);
-      console.log("Fetched notes:", response.data);
-    } catch (error) {
-      handleAlert("Error fetching notes!", "error");
-      console.error("Error fetching notes:", error);
-    }
-  };
-
-  const handleEditNote = async (editNote) => {
-    try {
-      const response = await axios.put(
-        `http://localhost:8000/notes/${editId}`,
-        editNote,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      setNotes((prevNotes) =>
-        prevNotes.map((note) => (note.id === editId ? response.data : note))
-      );
-      handleAlert("Note Edited Successfully!", "success");
-    } catch (error) {
-      handleAlert("Error editing note!", "error");
-      console.error("Error editing note:", error);
-    }
-  };
-
-  const handleCreateUser = async (newUser) => {
-    try {
-      const data = {
-        username: newUser.username,
-        email: newUser.email,
-        password: newUser.password,
-      };
-      console.log("Creating user:", data);
-      console.log("new user:", newUser);
-      const response = await axios.post("http://localhost:8000/users", data);
-      console.log("User created:", response.data);
-      handleAlert("User Created Successfully!", "success");
-    } catch (error) {
-      handleAlert("Error creating user!", "error");
-      console.error("Error creating user:", error);
-    }
-  };
-
-  return (
-    <>
-      <div className="bg-indigo-400 h-screen w-screen flex flex-col justify-between items-center overflow-y-auto overflow-x-hidden pb-4">
-        <Router>
-          <Navbar
+  return (<>
+    <Alert 
+      showAlert={showAlert}
+      setShowAlert={setShowAlert}
+      alertMessage={alertMessage}
+      alertType={alertType}
+    />
+    <Routes>
+      <Route
+        path="/"
+        element={
+          <Home
+            notes={notes}
+            folders={folders}
+            recentNotes={recentNotes}
+            setNotes={setNotes}
+            setFolders={setFolders}
+            setCurrentFolder={setCurrentFolder}
+            currentFolder={currentFolder}
+            currentNote={currentNote}
+            setCurrentNote={setCurrentNote}
             isLoggedIn={isLoggedIn}
-            setPopType={setPopType}
-            setShowPopup={setShowPopup}
             setIsLoggedIn={setIsLoggedIn}
-            setSignup={setSignup}
-          />
-          <Alert 
-          alertMessage={alertMessage}
-          alertType={alertType}
-          alert={alert}
-          />
-          <Popup
-            ref={pop}
-            showPopup={showPopup}
-            popType={popType}
-            setIsLoggedIn={setIsLoggedIn}
-            setShowPopup={setShowPopup}
+            currentNoteId={currentNoteId}
+            setCurrentNoteId={setCurrentNoteId}
+            folderNotes={folderNotes}
+            setNewNote={setNewNote}
+            setUpdatedNote={setUpdatedNote}
+            currentUser={currentUser}
             setLogout={setLogout}
-            handleDeleteNote={handleDeleteNote}
-            noteId={noteId}
-            setSignup={setSignup}
+            handleAlert={handleAlert}
           />
-          <Routes>
-            <Route
-              path="/"
-              element={
-                isLoggedIn ? (
-                  <Home
-                    notes={notes}
-                    setNewNote={setNewNote}
-                    setPopType={setPopType}
-                    setShowPopup={setShowPopup}
-                    setNoteId={setNoteId}
-                    setEditId={setEditId}
-                    token={token}
-                    editId={editId}
-                    setNotes={setNotes}
-                    editNote={editNote}
-                    setEditNote={setEditNote}
-                    handleEditNote={handleEditNote}
-                    setUnauthorized={setUnauthorized}
-                  />
-                ) : signup ? (
-                  <Signup
-                    newUser={newUser}
-                    setNewUser={setNewUser}
-                    setUserName={setUserName}
-                    setSignup={setSignup}
-                    setPassword={setPassword}
-                    handleCreateUser={handleCreateUser}
-                  />
-                ) : (
-                  <Login
-                    handleLogin={handleLogin}
-                    email={email}
-                    setEmail={setEmail}
-                    password={password}
-                    setPassword={setPassword}
-                    setSignup={setSignup}
-                  />
-                )
-              }
-            />
-          </Routes>
-        </Router>
-      </div>
+        }
+      />
+      <Route
+        path="/login"
+        element={
+          <Login
+            setIsLoggedIn={setIsLoggedIn}
+            setToken={setToken}
+            setTokenType={setTokenType}
+            setRefreshToken={setRefreshToken}
+            isLoggedIn={isLoggedIn}
+            handleAlert={handleAlert}
+            setSignup={setSignup}
+            setLogout={setLogout}
+          />
+        }
+      />
+      <Route
+        path="/register"
+        element={
+          <Signup
+            setIsLoggedIn={setIsLoggedIn}
+            setToken={setToken}
+            setTokenType={setTokenType}
+            setRefreshToken={setRefreshToken}
+            isLoggedIn={isLoggedIn}
+            handleCreateUser={handleCreateUser}
+            setSignup={setSignup}
+            handleAlert={handleAlert}
+          />
+        }
+      />
+    </Routes>
     </>
   );
 }
