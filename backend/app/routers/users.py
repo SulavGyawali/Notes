@@ -3,6 +3,7 @@ from ..database import get_db
 from fastapi import Response, status, HTTPException, Depends, APIRouter
 from sqlalchemy.orm import Session
 from typing import List
+from ..oauth2 import get_current_user
 
 router = APIRouter(
     prefix="/users",
@@ -21,6 +22,11 @@ async def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="User already exists")
     return new_user
+
+@router.get("/current", response_model=schemas.User)
+async def read_current_user(current_user: schemas.User = Depends(get_current_user)):
+    return current_user
+
 
 @router.get("/", response_model=List[schemas.User])
 async def read_users(db: Session = Depends(get_db)):

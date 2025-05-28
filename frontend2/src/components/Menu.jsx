@@ -164,8 +164,8 @@ const Menu = (props) => {
             />
           </div>
           <div className="mid flex flex-col">
-            <div className="username">Sujan Gyawali</div>
-            <div className="email opacity-50">sujan@example.com</div>
+            <div className="username">{props.currentUser?props.currentUser.username : ""}</div>
+            <div className="email opacity-50">{props.currentUser?props.currentUser.email : ""}</div>
           </div>
         </div>
 
@@ -187,7 +187,8 @@ const Menu = (props) => {
             <LuPencil className="text-sm" />
             Edit User
           </span>
-          <span className="hover:bg-neutral-700 w-[100%] h-[50%] p-2 rounded-lg flex items-center gap-2 cursor-pointer">
+          <span className="hover:bg-neutral-700 w-[100%] h-[50%] p-2 rounded-lg flex items-center gap-2 cursor-pointer"
+          onClick={() => props.setLogout(true)}>
             <IoExitOutline className="text-sm" />
             Logout
           </span>

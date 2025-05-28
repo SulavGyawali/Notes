@@ -28,6 +28,8 @@ function App() {
   const [newNote, setNewNote] = useState(null);
   const [updatedNote, setUpdatedNote] = useState(null);
   const [signup, setSignup] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [logout, setLogout] = useState(false);
 
   const handleCreateUser = async (newUser) => {
     try {
@@ -46,6 +48,46 @@ function App() {
       console.error("Error creating user:", error);
     }
   };
+
+  const getCurrentUser = async () => {
+    try {
+      const response = await axios.get("http://localhost:8000/users/current", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      setCurrentUser(response.data);
+    } catch (error) {
+      console.error("Error fetching current user:", error);
+    }
+  }
+
+  useEffect(() => {
+    if (token) {
+      getCurrentUser();
+    }
+  }
+  , [token]);
+
+  useEffect(() => {
+    if(logout) {
+      setIsLoggedIn(false);
+      setToken("");
+      setTokenType("");
+      setRefreshToken("");
+      setNotes([]);
+      setFolders(["Personal"]);
+      setRecentNotes([]);
+      setCurrentNote(null);
+      setCurrentNoteId(null);
+      setCurrentFolder(null);
+      setFolderNotes([]);
+      localStorage.removeItem("token");
+      localStorage.removeItem("refresh_token");
+      navigate("/login");
+    }
+  }, [logout, navigate]);
 
   const handleAddNewNote = async (note) => {
     try {
@@ -347,6 +389,8 @@ function App() {
             folderNotes={folderNotes}
             setNewNote={setNewNote}
             setUpdatedNote={setUpdatedNote}
+            currentUser={currentUser}
+            setLogout={setLogout}
           />
         }
       />
