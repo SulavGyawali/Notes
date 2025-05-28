@@ -4,7 +4,7 @@ A full-stack Notes application built with **React** and **Tailwind CSS** for the
 
 ## 📚 Table of Contents
 
-- [Demo Video](https://youtu.be/hsE2eXAFfwY)
+- [Demo Video](https://youtu.be/87bEpnDUHAM)
 - [Features](#features)
 - [Tech Stack](#tech-stack)
 - [Getting Started](#getting-started)
