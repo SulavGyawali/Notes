@@ -26,11 +26,11 @@ const Login = (props) => {
       props.setIsLoggedIn(true);
       localStorage.setItem("token", response.data.access_token);
       localStorage.setItem("refresh_token", response.data.refresh_token);
-      // handleAlert("Logged in Successfully!", "success");
+      props.handleAlert("Logged in Successfully!", "success");
       setEmail("");
       setPassword("");
     } catch (error) {
-      // handleAlert("Invalid credentials!", "error");
+      props.handleAlert("Invalid credentials!", "error");
       console.error("Error logging in:", error);
     }
   };

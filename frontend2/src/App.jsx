@@ -10,6 +10,7 @@ import Home from "./components/Home";
 import Login from "./components/Login";
 import axios from "axios";
 import Signup from "./components/Signup";
+import Alert from "./components/Alert";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -30,6 +31,9 @@ function App() {
   const [signup, setSignup] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [logout, setLogout] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertType, setAlertType] = useState("");
 
   const handleCreateUser = async (newUser) => {
     try {
@@ -42,12 +46,21 @@ function App() {
       console.log("new user:", newUser);
       const response = await axios.post("http://localhost:8000/users", data);
       console.log("User created:", response.data);
-      // handleAlert("User Created Successfully!", "success");
+      handleAlert("User Created Successfully!", "success");
     } catch (error) {
-      // handleAlert("Error creating user!", "error");
+      handleAlert("Error creating user!", "error");
       console.error("Error creating user:", error);
     }
   };
+
+  const handleAlert = (message, type) => {
+    setShowAlert(true);
+    setAlertMessage(message);
+    setAlertType(type);
+    setTimeout(() => {
+      setShowAlert(false);
+    }, 3000);
+  }
 
   const getCurrentUser = async () => {
     try {
@@ -86,6 +99,7 @@ function App() {
       localStorage.removeItem("token");
       localStorage.removeItem("refresh_token");
       navigate("/login");
+      handleAlert("Logged out successfully!", "success");
     }
   }, [logout, navigate]);
 
@@ -105,9 +119,9 @@ function App() {
       setNotes((prevNotes) => [...prevNotes, response.data]);
       setCurrentNote(response.data);
       setCurrentNoteId(response.data.id);
-      // handleAlert("Note added successfully!", "success");
+      handleAlert("Note added successfully!", "success");
     } catch (error) {
-      // handleAlert("Error adding note!", "error");
+      handleAlert("Error adding note!", "error");
       console.error("Error adding note:", error);
     }
   }
@@ -146,9 +160,9 @@ function App() {
         )
       );
       setCurrentNote(response.data);
-      // handleAlert("Note updated successfully!", "success");
+      handleAlert("Note updated successfully!", "success");
     } catch (error) {
-      // handleAlert("Error updating note!", "error");
+      handleAlert("Error updating note!", "error");
       console.error("Error updating note:", error);
     }
   }
@@ -176,7 +190,7 @@ function App() {
       setCurrentFolder(folderName);
       
     } catch (error) {
-      // handleAlert("Error fetching folder notes!", "error");
+      handleAlert("Error fetching folder notes!", "error");
       console.error("Error fetching folder notes:", error);
     }
   };
@@ -197,7 +211,7 @@ function App() {
       });
       setNotes(response.data);
     } catch (error) {
-      // handleAlert("Error fetching notes!", "error");
+      handleAlert("Error fetching notes!", "error");
       console.error("Error fetching notes:", error);
     }
   };
@@ -367,7 +381,13 @@ function App() {
     }
   }, [token]);
 
-  return (
+  return (<>
+    <Alert 
+      showAlert={showAlert}
+      setShowAlert={setShowAlert}
+      alertMessage={alertMessage}
+      alertType={alertType}
+    />
     <Routes>
       <Route
         path="/"
@@ -391,6 +411,7 @@ function App() {
             setUpdatedNote={setUpdatedNote}
             currentUser={currentUser}
             setLogout={setLogout}
+            handleAlert={handleAlert}
           />
         }
       />
@@ -403,6 +424,7 @@ function App() {
             setTokenType={setTokenType}
             setRefreshToken={setRefreshToken}
             isLoggedIn={isLoggedIn}
+            handleAlert={handleAlert}
           />
         }
       />
@@ -417,10 +439,12 @@ function App() {
             isLoggedIn={isLoggedIn}
             handleCreateUser={handleCreateUser}
             setSignup={setSignup}
+            handleAlert={handleAlert}
           />
         }
       />
     </Routes>
+    </>
   );
 }
 

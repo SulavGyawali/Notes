@@ -39,6 +39,7 @@ const Home = (props) => {
       setCurrentNoteId={props.setCurrentNoteId}
       setNewNote={props.setNewNote}
       setUpdatedNote={props.setUpdatedNote}
+      handleAlert={props.handleAlert}
       />
     </div>
   )

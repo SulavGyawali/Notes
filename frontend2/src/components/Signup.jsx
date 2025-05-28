@@ -20,7 +20,7 @@ const Signup = (props) => {
     // Handle signup logic here
     try {
       if (password !== confirmPassword) {
-        // handleAlert("Passwords do not match!", "error");
+        props.handleAlert("Passwords do not match!", "error");
         return;
       }
       const data = {
@@ -31,9 +31,9 @@ const Signup = (props) => {
       console.log("Creating user:", data);
       const response = await axios.post("http://localhost:8000/users", data);
       console.log("User created:", response.data);
-      // handleAlert("User Created Successfully!", "success");
+      props.handleAlert("User Created Successfully!", "success");
     } catch (error) {
-      // handleAlert("Error creating user!", "error");
+      props.handleAlert("Error creating user!", "error");
       console.error("Error creating user:", error);
     }
     setEmail("");

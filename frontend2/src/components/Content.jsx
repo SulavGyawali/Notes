@@ -62,6 +62,7 @@ const Content = (props) => {
         updated_at: new Date().toISOString(),
       });
       setShowSave(false);
+      props.handleAlert("Note updated successfully!", "success");
     } else {
       props.setNewNote({
         title: title,
@@ -86,6 +87,7 @@ const Content = (props) => {
       setFolder("Personal");
       setDate(new Date().toLocaleDateString("en-US"));
       setShowSave(false);
+      props.handleAlert("New note created successfully!", "success");
     }
   };
 
