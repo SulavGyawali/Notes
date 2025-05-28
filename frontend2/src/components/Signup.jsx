@@ -1,19 +1,49 @@
-import {useState} from "react";
+import { useState } from "react";
 import { FaRegUser } from "react-icons/fa";
 import { MdAlternateEmail } from "react-icons/md";
+import axios from "axios";
 import {
   IoLockClosedOutline,
   IoEyeOffOutline,
   IoEyeOutline,
 } from "react-icons/io5";
 
-const Signup = () => {
+const Signup = (props) => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  const handleSignup = async () => {
+    // Handle signup logic here
+    try {
+      if (password !== confirmPassword) {
+        // handleAlert("Passwords do not match!", "error");
+        return;
+      }
+      const data = {
+        username: `${firstName} ${lastName}`,
+        email: email,
+        password: password,
+      };
+      console.log("Creating user:", data);
+      const response = await axios.post("http://localhost:8000/users", data);
+      console.log("User created:", response.data);
+      // handleAlert("User Created Successfully!", "success");
+    } catch (error) {
+      // handleAlert("Error creating user!", "error");
+      console.error("Error creating user:", error);
+    }
+    setEmail("");
+    setFirstName("");
+    setLastName("");
+    setPassword("");
+    setConfirmPassword("");
+    props.setIsLoggedIn(false);
+    props.setSignup(false); 
+  };
 
   return (
     <div className="w-screen h-screen flex gap-10 justify-between items-center text-white">
@@ -24,7 +54,6 @@ const Signup = () => {
       <div className="signup h-[90%] w-[45%] flex flex-col  items-center gap-5 mx-auto p-20 pt-10 rounded-2xl">
         <div className="create w-full  flex justify-between items-center mb-5">
           <span className="text-4xl w-full">Create New Account</span>
-         
         </div>
 
         <div className="username flex w-full justify-between items-center gap-[20%]">
@@ -80,16 +109,16 @@ const Signup = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
             {showPassword ? (
-                        <IoEyeOutline
-                          className="text-2xl mr-2 cursor-pointer opacity-50 hover:opacity-100"
-                          onClick={() => setShowPassword(false)}
-                        />
-                      ) : (
-                        <IoEyeOffOutline
-                          className="text-2xl mr-2 cursor-pointer opacity-50 hover:opacity-100"
-                          onClick={() => setShowPassword(true)}
-                        />
-                      )}
+              <IoEyeOutline
+                className="text-2xl mr-2 cursor-pointer opacity-50 hover:opacity-100"
+                onClick={() => setShowPassword(false)}
+              />
+            ) : (
+              <IoEyeOffOutline
+                className="text-2xl mr-2 cursor-pointer opacity-50 hover:opacity-100"
+                onClick={() => setShowPassword(true)}
+              />
+            )}
           </div>
         </div>
         <div className="confirm flex flex-col gap-2 w-full">
@@ -101,22 +130,26 @@ const Signup = () => {
               className="h-full w-full focus:outline-0 text-xl"
               placeholder="Confirm Password"
               value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
             />
             {showPassword ? (
-                        <IoEyeOutline
-                          className="text-2xl mr-2 cursor-pointer opacity-50 hover:opacity-100"
-                          onClick={() => setShowPassword(false)}
-                        />
-                      ) : (
-                        <IoEyeOffOutline
-                          className="text-2xl mr-2 cursor-pointer opacity-50 hover:opacity-100"
-                          onClick={() => setShowPassword(true)}
-                        />
-                      )}
+              <IoEyeOutline
+                className="text-2xl mr-2 cursor-pointer opacity-50 hover:opacity-100"
+                onClick={() => setShowPassword(false)}
+              />
+            ) : (
+              <IoEyeOffOutline
+                className="text-2xl mr-2 cursor-pointer opacity-50 hover:opacity-100"
+                onClick={() => setShowPassword(true)}
+              />
+            )}
           </div>
         </div>
         <div className="submit">
-          <button className="w-[20vw] h-[6vh] bg-white flex justify-center items-center text-black text-xl font-medium cursor-pointer hover:bg-gray-200">
+          <button
+            className="w-[20vw] h-[6vh] bg-white flex justify-center items-center text-black text-xl font-medium cursor-pointer hover:bg-gray-200"
+            onClick={handleSignup}
+          >
             Sign Up
           </button>
         </div>

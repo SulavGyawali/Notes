@@ -27,7 +27,7 @@ function App() {
   const [folderNotes, setFolderNotes] = useState([]);
   const [newNote, setNewNote] = useState(null);
   const [updatedNote, setUpdatedNote] = useState(null);
-  const [signup, setSignup] = useState(true);
+  const [signup, setSignup] = useState(false);
 
   const handleCreateUser = async (newUser) => {
     try {
@@ -372,6 +372,7 @@ function App() {
             setRefreshToken={setRefreshToken}
             isLoggedIn={isLoggedIn}
             handleCreateUser={handleCreateUser}
+            setSignup={setSignup}
           />
         }
       />
