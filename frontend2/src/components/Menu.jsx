@@ -50,6 +50,7 @@ const Menu = (props) => {
     });
     props.setCurrentFolder("Personal");
   };
+
   React.useEffect(() => {
     if (mouseInDots || mouseInSettings) {
       setShowSettings(true);
@@ -57,6 +58,17 @@ const Menu = (props) => {
       setShowSettings(false);
     }
   }, [mouseInDots, mouseInSettings]);
+
+  const handleAddFolder = () => {
+    const newFolder = prompt("Enter folder name:");
+    if (newFolder) {
+      props.setFolders([...props.folders, newFolder]);
+      props.handleAlert("Folder created successfully!", "success");
+      props.setCurrentFolder(newFolder);
+    } else {
+      props.handleAlert("Folder name cannot be empty!", "error");
+    }
+  };
 
   return (
     <div className="w-[20%] h-[100vh] flex flex-col  pt-7 font-medium">
@@ -103,9 +115,12 @@ const Menu = (props) => {
         </div>
       </div>
       <div className="box4 max-h-[30%] w-full h-[20%] mt-5 flex flex-col">
-        <div className="folders  opacity-50  pl-3 flex justify-between">
-          <span className="text-sm">Folder</span>
-          <HiOutlineFolderAdd className="text-2xl mr-4 hover:opacity-100 cursor-pointer" />
+        <div className="folders   pl-3 flex justify-between">
+          <span className="text-sm opacity-50">Folder</span>
+          <HiOutlineFolderAdd
+            className="text-2xl mr-4 opacity-50 hover:opacity-100 cursor-pointer"
+            onClick={handleAddFolder}
+          />
         </div>
         <div className="folder-list max-h-[30vh]  w-full h-[20vh] flex flex-col overflow-y-scroll scrollbar">
           {props.folders.map((folder) => (
@@ -123,9 +138,10 @@ const Menu = (props) => {
               ) : (
                 <FaRegFolder className="text-2xl " />
               )}
-              <div className="text-lg max-h-full overflow-hidden whitespace-nowrap text-ellipsis ml-2 ">
-                {folder || "Untitled Folder"}
-              </div>
+              <input
+                className="text-lg max-h-full overflow-hidden whitespace-nowrap text-ellipsis ml-2 "
+                value={folder || "Untitled Folder"}
+              />
             </div>
           ))}
         </div>
