@@ -23,6 +23,7 @@ frontend/*.ntvs*
 frontend/*.njsproj
 frontend/*.sln
 frontend/*.sw?
+frontend/node_modules/
 
 frontend3/
 
