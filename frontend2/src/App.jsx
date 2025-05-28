@@ -101,7 +101,7 @@ function App() {
       navigate("/login");
       handleAlert("Logged out successfully!", "success");
     }
-  }, [logout, navigate]);
+  }, [logout]);
 
   const handleAddNewNote = async (note) => {
     try {
@@ -427,6 +427,7 @@ function App() {
             isLoggedIn={isLoggedIn}
             handleAlert={handleAlert}
             setSignup={setSignup}
+            setLogout={setLogout}
           />
         }
       />

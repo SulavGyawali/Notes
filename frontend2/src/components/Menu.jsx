@@ -18,6 +18,7 @@ const Menu = (props) => {
   const [mouseInDots, setMouseInDots] = React.useState(false);
   const [mouseInSettings, setMouseInSettings] = React.useState(false);
   const [showSettings, setShowSettings] = React.useState(false);
+  const [editingFolder, setEditingFolder] = React.useState(null);
   const images = [
     myImage1,
     myImage2,
@@ -44,11 +45,13 @@ const Menu = (props) => {
     props.setCurrentNote({
       title: "",
       description: "",
-      folder: "Personal",
+      folder: props.currentFolder || "Personal",
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     });
-    props.setCurrentFolder("Personal");
+    props.currentFolder
+      ? props.setCurrentFolder(props.currentFolder)
+      : props.setCurrentFolder("Personal");
   };
 
   React.useEffect(() => {
@@ -60,14 +63,14 @@ const Menu = (props) => {
   }, [mouseInDots, mouseInSettings]);
 
   const handleAddFolder = () => {
-    const newFolder = prompt("Enter folder name:");
-    if (newFolder) {
-      props.setFolders([...props.folders, newFolder]);
-      props.handleAlert("Folder created successfully!", "success");
-      props.setCurrentFolder(newFolder);
-    } else {
-      props.handleAlert("Folder name cannot be empty!", "error");
-    }
+    props.setFolders([...props.folders, "new folder"]);
+    props.handleAlert("Folder created successfully!", "success");
+    props.setCurrentFolder(newFolder);
+  };
+  const handleNameChange = (index, newName) => {
+    const updated = [...props.folders];
+    updated[index] = newName;
+    props.setFolders(updated);
   };
 
   return (
@@ -123,25 +126,41 @@ const Menu = (props) => {
           />
         </div>
         <div className="folder-list max-h-[30vh]  w-full h-[20vh] flex flex-col overflow-y-scroll scrollbar">
-          {props.folders.map((folder) => (
+          {props.folders.map((folder, index) => (
             <div
-              className={`folder cursor-pointer flex pl-3  min-h-[5vh] items-center overflow-hidden ${
+              className={`folder cursor-pointer flex pl-3 min-h-[5vh] items-center overflow-hidden ${
                 props.currentFolder === folder
                   ? "opacity-100 bg-neutral-800"
                   : "opacity-50"
               } hover:bg-neutral-800`}
               onClick={() => props.setCurrentFolder(folder)}
-              key={folder}
+              key={index}
             >
               {props.currentFolder === folder ? (
-                <FaRegFolderOpen className="text-2xl " />
+                <FaRegFolderOpen className="text-2xl" />
               ) : (
-                <FaRegFolder className="text-2xl " />
+                <FaRegFolder className="text-2xl" />
               )}
-              <input
-                className="text-lg max-h-full overflow-hidden whitespace-nowrap text-ellipsis ml-2 "
-                value={folder || "Untitled Folder"}
-              />
+
+              {editingFolder === index ? (
+                <input
+                  className="text-lg ml-2 mr-10 bg-transparent border-b border-gray-500 outline-none text-white"
+                  value={folder}
+                  onChange={(e) => handleNameChange(index, e.target.value)}
+                  onBlur={() => setEditingFolder(null)} // exit edit mode
+                  autoFocus
+                />
+              ) : (
+                <input
+                  className="text-lg ml-2 mr-10 bg-transparent outline-none text-white cursor-pointer"
+                  value={folder || "Untitled Folder"}
+                  readOnly
+                  onClick={(e) => {
+                    e.stopPropagation(); // prevent onClick of parent div
+                    setEditingFolder(index);
+                  }}
+                />
+              )}
             </div>
           ))}
         </div>

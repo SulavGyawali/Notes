@@ -124,8 +124,8 @@ const Content = (props) => {
 
   return (
     <div className="w-[55%] h-[100%] flex flex-col p-2 px-7  ">
-      {props.currentNoteId ? (
-        <>
+      {props.currentNote ? (
+        <div>
           <div className="box1 mt-7 flex justify-between text-2xl font-medium">
             <input
               type="text"
@@ -220,7 +220,7 @@ const Content = (props) => {
               Save
             </button>
           </div>
-        </>
+        </div>
       ) : (
         <>
           <div className="nonote w-full h-full flex flex-col justify-center items-center gap-5">

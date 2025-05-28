@@ -29,6 +29,8 @@ const Login = (props) => {
       props.handleAlert("Logged in Successfully!", "success");
       setEmail("");
       setPassword("");
+      props.setSignup(false);
+      props.setLogout(false);
     } catch (error) {
       props.handleAlert("Invalid credentials!", "error");
       console.error("Error logging in:", error);
