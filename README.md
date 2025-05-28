@@ -2,6 +2,13 @@
 
 A full-stack Notes application built with **React** and **Tailwind CSS** for the frontend, **FastAPI** for the backend, and **PostgreSQL** as the database.
 
+## Screen Shot
+
+![Alt Text](/home.png)
+![Alt Text](/login.png)
+![Alt Text](/register.png)
+
+
 ## 📚 Table of Contents
 
 - [Demo Video](https://youtu.be/87bEpnDUHAM)
