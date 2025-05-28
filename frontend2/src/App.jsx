@@ -281,7 +281,7 @@ function App() {
     } else {
       navigate("/");
     }
-  }, [isLoggedIn, navigate]);
+  }, [isLoggedIn, navigate, signup]);
 
   useEffect(() => {
     const handleRecentNotes = () => {
@@ -341,6 +341,7 @@ function App() {
         if (response.status === 200) {
           setToken(storedToken);
           setIsLoggedIn(true);
+          setCurrentFolder("Personal");
         }
       } catch (error) {
         const refresh = localStorage.getItem("refresh_token");
@@ -425,6 +426,7 @@ function App() {
             setRefreshToken={setRefreshToken}
             isLoggedIn={isLoggedIn}
             handleAlert={handleAlert}
+            setSignup={setSignup}
           />
         }
       />

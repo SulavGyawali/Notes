@@ -17,7 +17,6 @@ const Signup = (props) => {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleSignup = async () => {
-    // Handle signup logic here
     try {
       if (password !== confirmPassword) {
         props.handleAlert("Passwords do not match!", "error");
@@ -42,23 +41,20 @@ const Signup = (props) => {
     setPassword("");
     setConfirmPassword("");
     props.setIsLoggedIn(false);
-    props.setSignup(false); 
+    props.setSignup(false);
   };
 
   return (
     <div className="w-screen h-screen flex gap-10 justify-between items-center text-white">
-      <div className="txt text-6xl  flex flex-col justify-center items-center w-[40%] h-full bg-white text-black gap-2">
-        <span className="custom-kaushan">Notwed</span>
-        <span className="text-lg">Notes, Just Smarter.</span>
-      </div>
-      <div className="signup h-[90%] w-[45%] flex flex-col  items-center gap-5 mx-auto p-20 pt-10 rounded-2xl">
+      <div className="signup h-[90%] w-[45%] flex flex-col justify-center items-center gap-5 mx-auto p-20 pt-10 rounded-2xl">
         <div className="create w-full  flex justify-between items-center mb-5">
-          <span className="text-4xl w-full">Create New Account</span>
+          <span className="text-4xl w-full flex justify-center">
+            Create a New Account
+          </span>
         </div>
 
         <div className="username flex w-full justify-between items-center gap-[20%]">
           <div className="first flex flex-col gap-2 w-full">
-            <span className="opacity-50 text-xl">First Name</span>
             <div className="input w-full border h-[6vh] flex justify-center items-center">
               <FaRegUser className="text-xl m-2" />
               <input
@@ -71,7 +67,6 @@ const Signup = (props) => {
             </div>
           </div>
           <div className="last flex flex-col gap-2 w-full">
-            <span className="opacity-50 text-xl">Last Name</span>
             <div className="input w-full border h-[6vh] flex justify-center items-center">
               <FaRegUser className="text-xl m-2" />
               <input
@@ -85,7 +80,6 @@ const Signup = (props) => {
           </div>
         </div>
         <div className="email flex flex-col gap-2 w-full">
-          <span className="opacity-50">Email</span>
           <div className="input w-full border h-[6vh] flex justify-center items-center">
             <MdAlternateEmail className="text-xl m-2" />
             <input
@@ -98,7 +92,6 @@ const Signup = (props) => {
           </div>
         </div>
         <div className="password flex flex-col gap-2 w-full">
-          <span className="opacity-50">Password</span>
           <div className="input w-full border h-[6vh] flex justify-center items-center">
             <IoLockClosedOutline className="text-xl m-2" />
             <input
@@ -122,7 +115,6 @@ const Signup = (props) => {
           </div>
         </div>
         <div className="confirm flex flex-col gap-2 w-full">
-          <span className="opacity-50">Confirm Password</span>
           <div className="input w-full border h-[6vh] flex justify-center items-center">
             <IoLockClosedOutline className="text-xl m-2" />
             <input
@@ -153,6 +145,20 @@ const Signup = (props) => {
             Sign Up
           </button>
         </div>
+      </div>
+      <div className="txt text-6xl  flex flex-col justify-center items-center w-[40%] h-full bg-white text-black gap-2">
+        <span className="custom-kaushan">Nowted</span>
+        <span className="text-lg">Notes, Just Smarter.</span>
+        <span
+          className="text-lg underline-offset-2 underline cursor-pointer"
+          onClick={() => {
+            console.log("Switching to login");
+            props.setSignup(false);
+            props.setIsLoggedIn(false);
+          }}
+        >
+          Have an account?
+        </span>
       </div>
     </div>
   );

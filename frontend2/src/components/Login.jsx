@@ -1,5 +1,5 @@
 import React from "react";
-import { FiUser } from "react-icons/fi";
+import { MdAlternateEmail } from "react-icons/md";
 import {
   IoLockClosedOutline,
   IoEyeOffOutline,
@@ -35,54 +35,66 @@ const Login = (props) => {
     }
   };
   return (
-    <div className="w-screen h-screen flex flex-col gap-10 justify-center items-center text-white">
-      <div className="txt text-6xl  flex flex-col justify-center items-center gap-2">
-        <span className="custom-kaushan">Notwed</span>
-        <span className="text-lg">Notes, Just Smarter.</span>
-      </div>
-      <div className="login flex flex-col gap-3">
-        <div className="email w-[20vw] h-[5vh] border flex justify-between items-center">
-          <FiUser className="text-2xl ml-2" />
-          <input
-            type="text"
-            className="w-full h-full focus:outline-0 p-2"
-            placeholder="EMAIL"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-        <div className="password w-[20vw] h-[5vh]  border flex justify-between items-center">
-          <IoLockClosedOutline className="text-2xl ml-2" />
-          <input
-            type={`${showPassword ? "text" : "password"}`}
-            className="w-full h-full focus:outline-0 p-2"
-            placeholder="PASSWORD"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          {showPassword ? (
-            <IoEyeOutline
-              className="text-2xl mr-2 cursor-pointer opacity-50 hover:opacity-100"
-              onClick={() => setShowPassword(false)}
-            />
-          ) : (
-            <IoEyeOffOutline
-              className="text-2xl mr-2 cursor-pointer opacity-50 hover:opacity-100"
-              onClick={() => setShowPassword(true)}
-            />
-          )}
-        </div>
-      </div>
-      <div className="flex flex-col gap-2">
-        <button
-          className="w-[20vw] h-[5vh] bg-white flex justify-center items-center text-black text-xl font-medium cursor-pointer hover:bg-gray-200"
-          onClick={() => handleLogin()}
-        >
-          <span>LOGIN</span>
-        </button>
-        <span className="flex justify-end opacity-50">Forgot password?</span>
-      </div>
-    </div>
+   <div className="w-screen h-screen flex gap-10 justify-between items-center text-white">
+         <div className="txt text-6xl  flex flex-col justify-center items-center w-[40%] h-full bg-white text-black gap-2">
+           <span className="custom-kaushan">Nowted</span>
+           <span className="text-lg">Notes, Just Smarter.</span>
+           <span className="text-lg underline-offset-2 underline cursor-pointer"
+           onClick={() => props.setSignup(true)}
+           >New to Nowted?</span>
+         </div>
+         <div className="login h-[90%] w-[45%] flex flex-col justify-center  items-center gap-5 mx-auto p-20 pt-10 rounded-2xl">
+           <div className="create w-full  flex justify-between items-center mb-5">
+             <span className="text-4xl w-full flex justify-center">Login</span>
+           </div>
+   
+           
+           <div className="email flex flex-col gap-2 w-full">
+             <div className="input w-full border h-[6vh] flex justify-center items-center">
+               <MdAlternateEmail className="text-xl m-2" />
+               <input
+                 type="text"
+                 className="h-full w-full focus:outline-0 text-xl"
+                 placeholder="Email"
+                 value={email}
+                 onChange={(e) => setEmail(e.target.value)}
+               />
+             </div>
+           </div>
+           <div className="password flex flex-col gap-2 w-full">
+             <div className="input w-full border h-[6vh] flex justify-center items-center">
+               <IoLockClosedOutline className="text-xl m-2" />
+               <input
+                 type={`${showPassword ? "text" : "password"}`}
+                 className="h-full w-full focus:outline-0 text-xl"
+                 placeholder="Password"
+                 value={password}
+                 onChange={(e) => setPassword(e.target.value)}
+               />
+               {showPassword ? (
+                 <IoEyeOutline
+                   className="text-2xl mr-2 cursor-pointer opacity-50 hover:opacity-100"
+                   onClick={() => setShowPassword(false)}
+                 />
+               ) : (
+                 <IoEyeOffOutline
+                   className="text-2xl mr-2 cursor-pointer opacity-50 hover:opacity-100"
+                   onClick={() => setShowPassword(true)}
+                 />
+               )}
+             </div>
+           </div>
+           
+           <div className="submit">
+             <button
+               className="w-[20vw] h-[6vh] bg-white flex justify-center items-center text-black text-xl font-medium cursor-pointer hover:bg-gray-200"
+               onClick={handleLogin}
+             >
+               Login
+             </button>
+           </div>
+         </div>
+       </div>
   );
 };
 

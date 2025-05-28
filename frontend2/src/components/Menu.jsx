@@ -6,11 +6,27 @@ import { FiFileText, FiTrash } from "react-icons/fi";
 import { FaRegFolder, FaRegFolderOpen, FaRegHeart } from "react-icons/fa";
 import { HiOutlineFolderAdd } from "react-icons/hi";
 import { IoIosMore } from "react-icons/io";
+import myImage1 from "../assets/image1.png";
+import myImage2 from "../assets/image2.png";
+import myImage3 from "../assets/image3.png";
+import myImage4 from "../assets/image4.png";
+import myImage5 from "../assets/image5.png";
+import myImage6 from "../assets/image6.png";
+import myImage7 from "../assets/image7.png";
 
 const Menu = (props) => {
   const [mouseInDots, setMouseInDots] = React.useState(false);
   const [mouseInSettings, setMouseInSettings] = React.useState(false);
   const [showSettings, setShowSettings] = React.useState(false);
+  const images = [
+    myImage1,
+    myImage2,
+    myImage3,
+    myImage4,
+    myImage5,
+    myImage6,
+    myImage7,
+  ];
   const handleMouseLeaveDots = () => {
     setMouseInDots(false);
   };
@@ -89,7 +105,7 @@ const Menu = (props) => {
       <div className="box4 max-h-[30%] w-full h-[20%] mt-5 flex flex-col">
         <div className="folders  opacity-50  pl-3 flex justify-between">
           <span className="text-sm">Folder</span>
-          <HiOutlineFolderAdd className="text-2xl mr-4" />
+          <HiOutlineFolderAdd className="text-2xl mr-4 hover:opacity-100 cursor-pointer" />
         </div>
         <div className="folder-list max-h-[30vh]  w-full h-[20vh] flex flex-col overflow-y-scroll scrollbar">
           {props.folders.map((folder) => (
@@ -158,14 +174,18 @@ const Menu = (props) => {
         <div className="left flex items-center gap-2">
           <div className="left">
             <img
-              src="https://avatars.githubusercontent.com/u/80841276?v=4"
+              src={images[props.currentUser ? props.currentUser.id % 7 : 1]}
               alt=""
               className="h-10 w-10 rounded-3xl "
             />
           </div>
           <div className="mid flex flex-col">
-            <div className="username">{props.currentUser?props.currentUser.username : ""}</div>
-            <div className="email opacity-50">{props.currentUser?props.currentUser.email : ""}</div>
+            <div className="username">
+              {props.currentUser ? props.currentUser.username : ""}
+            </div>
+            <div className="email opacity-50">
+              {props.currentUser ? props.currentUser.email : ""}
+            </div>
           </div>
         </div>
 
@@ -187,8 +207,10 @@ const Menu = (props) => {
             <LuPencil className="text-sm" />
             Edit User
           </span>
-          <span className="hover:bg-neutral-700 w-[100%] h-[50%] p-2 rounded-lg flex items-center gap-2 cursor-pointer"
-          onClick={() => props.setLogout(true)}>
+          <span
+            className="hover:bg-neutral-700 w-[100%] h-[50%] p-2 rounded-lg flex items-center gap-2 cursor-pointer"
+            onClick={() => props.setLogout(true)}
+          >
             <IoExitOutline className="text-sm" />
             Logout
           </span>
