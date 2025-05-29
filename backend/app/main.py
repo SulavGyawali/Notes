@@ -13,11 +13,12 @@ models.Base.metadata.create_all(bind=engine)
 
 load_dotenv()
 
-POSTGRES_HOST = os.getenv("POSTGRES_HOST")
+POSTGRES_HOST = os.getenv("POSTGRES_HOST") or "localhost"
 POSTGRES_PORT = os.getenv("POSTGRES_PORT")
 POSTGRES_DB = os.getenv("POSTGRES_DB")
 POSTGRES_USER = os.getenv("POSTGRES_USER")
 POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD")
+POSTGRES_PORT= os.getenv("POSTGRES_PORT")
 # print(POSTGRES_USER)
 
 app = FastAPI()
@@ -42,7 +43,7 @@ while True:
             user=POSTGRES_USER,
             password=POSTGRES_PASSWORD,
             host=POSTGRES_HOST,
-            port="5432",
+            port=POSTGRES_PORT,
             cursor_factory=RealDictCursor,
         )
         cur = conn.cursor()
